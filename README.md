@@ -1,5 +1,9 @@
 # MACTE Website
 
+Current construction build located here
+https://mackmusial.github.io/MACTE_Website/
+
+
 Static website for the **Michigan Association of Colleges for Teacher Education (MACTE)**,
 a not-for-profit AACTE state affiliate. Built as plain HTML/CSS/JS so it can be hosted
 anywhere without a build step — Netlify, SVSU web hosting, or elsewhere.
