@@ -16,7 +16,7 @@ are examples only and need to be swapped for real MACTE information before launc
 
 ```
 index.html         Home
-leadership.html     Officers, committees, past presidents, deans directory
+executive-board.html Officers, committees, past presidents, deans directory
 meetings.html       Meeting dates
 awards.html         Awards program, nominations, past recipients
 bylaws.html         Constitution & bylaws downloads
