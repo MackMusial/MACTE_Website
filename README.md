@@ -11,11 +11,6 @@ anywhere without a build step — Netlify, SVSU web hosting, or elsewhere.
 Modeled in tone and structure after [mytacte.org](https://mytacte.org) (Texas's equivalent
 association), adapted for Michigan.
 
-## Status
-
-All content is currently **placeholder text** — names, dates, dues amounts, and documents
-are examples only and need to be swapped for real MACTE information before launch.
-
 ## Structure
 
 ```
@@ -29,6 +24,10 @@ membership.html     Membership benefits, dues, how to join/renew
 contact.html        Contact info + message form
 css/styles.css      All site styling (single stylesheet, CSS variables for theme colors)
 js/main.js          Mobile nav toggle + footer year
+js/csv-utils.js     Shared CSV parser for pages that pull data from a published Google Sheet
+js/meetings-data.js Fetches/parses the meetings Google Sheet, shared by index.html and meetings.html
+js/meetings.js      Renders the full meeting table on meetings.html
+js/index-upcoming.js Renders the "Upcoming" preview card on index.html
 assets/             Logo (placeholder SVG) and other images
 documents/          PDFs referenced by bylaws.html and resources.html (see documents/README.md)
 ```
@@ -46,10 +45,28 @@ python -m http.server 8000
 # then visit http://localhost:8000
 ```
 
+## Updating meeting dates
+
+Meeting dates on the homepage and `meetings.html` are **not** hardcoded in HTML — both pages
+fetch a published Google Sheet at load time, so meetings can be added/edited/removed by editing
+a spreadsheet instead of code.
+
+- The sheet's first tab needs a header row `Date, Time, Location, Focus`, one meeting per row
+  below it.
+- The published CSV link lives in `js/meetings-data.js` as `MEETINGS_SHEET_CSV_URL`. If the
+  sheet is ever recreated (not just edited), republish it (File > Share > Publish to web >
+  select the tab > Comma-separated values (.csv)) and update that URL.
+- The homepage's "Upcoming" card shows the first 3 rows from the sheet; `meetings.html` shows
+  all rows. Neither page filters out past dates automatically, so remove old rows from the
+  sheet once they've passed to keep the homepage preview accurate.
+- If the sheet is unreachable, `meetings.html` shows an explicit error notice; the homepage
+  card fails silently and keeps whatever placeholder text is in `index.html`.
+
 ## Replacing placeholder content
 
 1. **Text/data**: search each page for example names, dates, and dollar amounts and replace
-   with real MACTE information (officers, dues, meeting schedule, award history).
+   with real MACTE information (officers, dues, award history). Meeting dates are handled via
+   the Google Sheet described above, not by editing HTML directly.
 2. **Documents**: drop real PDFs into `documents/` using the filenames already linked
    (see `documents/README.md`), or update the `href` values if using different filenames.
 3. **Logo**: the real MACTE logo (Michigan state silhouette + wordmark) is already in place in
