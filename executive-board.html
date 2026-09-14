@@ -141,16 +141,13 @@
           <h2>Deans of Education Directory</h2>
           <p class="text-muted">Contact information for deans, chairs, and directors of educator preparation programs at MACTE member institutions.</p>
         </div>
+        <div id="deans-notice" class="notice">Loading directory&hellip;</div>
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>Institution</th><th>Dean / Director</th><th>Contact</th></tr>
+              <tr><th>Institution</th><th>Dean / Director</th><th>Email</th><th>Phone</th></tr>
             </thead>
-            <tbody>
-              <tr><td>Sample State University</td><td>Jane Doe</td><td>jdoe@example.edu</td></tr>
-              <tr><td>Example University</td><td>John Smith</td><td>jsmith@example.edu</td></tr>
-              <tr><td>Sample College</td><td>Pat Johnson</td><td>pjohnson@example.edu</td></tr>
-              <tr><td>Example State University</td><td>Morgan Lee</td><td>mlee@example.edu</td></tr>
+            <tbody id="deans-table-body">
             </tbody>
           </table>
         </div>
@@ -191,5 +188,8 @@
   </footer>
 
   <script src="js/main.js"></script>
+  <script src="js/csv-utils.js"></script>
+  <script src="js/deans-data.js"></script>
+  <script src="js/deans.js"></script>
 </body>
 </html>
