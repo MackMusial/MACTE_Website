@@ -19,6 +19,14 @@
 //    site's domain so it can't be reused elsewhere.
 // 4. Paste that key into CALENDAR_API_KEY below.
 
+// ****************************************************************
+// **  TODO BEFORE GOING LIVE: this API key is currently UNRESTRICTED.  **
+// **  Go to Cloud Console > APIs & Services > Credentials > this key,  **
+// **  under "Website restrictions" click Add and enter the real site  **
+// **  domain (e.g. mackmusial.github.io/* or macte.us/*), then Save.  **
+// **  Until that's done, anyone who copies this key from the page     **
+// **  source can use it from anywhere, burning your API quota.        **
+// ****************************************************************
 const CALENDAR_ID = "mackmusial@gmail.com";
 const CALENDAR_API_KEY = "AIzaSyDIvO7UjO3tzn2u36vA-lzbAENG9vEpg_4";
 const CALENDAR_MAX_EVENTS = 25;
