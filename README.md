@@ -15,10 +15,9 @@ association), adapted for Michigan.
 
 ```
 index.html         Home
-executive-board.html Officers, committees, past presidents, deans directory
+executive-board.html Officers, committees, past presidents
 meetings.html       Meeting dates
-awards.html         Awards program, nominations, past recipients
-bylaws.html         Constitution & bylaws downloads
+bylaws.html         Bylaws downloads
 resources.html      Archived articles, external links, abbreviations glossary
 membership.html     Membership benefits, dues, how to join/renew
 contact.html        Contact info + message form
@@ -33,7 +32,7 @@ documents/          PDFs referenced by bylaws.html and resources.html (see docum
 ```
 
 Each page repeats the same header/nav and footer markup (no build step = no templating),
-so when editing shared header/footer content, update it across all 8 HTML files.
+so when editing shared header/footer content, update it across all 7 HTML files.
 
 ## Local preview
 
@@ -65,7 +64,7 @@ a spreadsheet instead of code.
 ## Replacing placeholder content
 
 1. **Text/data**: search each page for example names, dates, and dollar amounts and replace
-   with real MACTE information (officers, dues, award history). Meeting dates are handled via
+   with real MACTE information (officers, dues, past presidents). Meeting dates are handled via
    the Google Sheet described above, not by editing HTML directly.
 2. **Documents**: drop real PDFs into `documents/` using the filenames already linked
    (see `documents/README.md`), or update the `href` values if using different filenames.
