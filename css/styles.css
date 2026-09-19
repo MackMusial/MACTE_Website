@@ -349,6 +349,25 @@ input:focus, textarea:focus, select:focus {
 }
 textarea { resize: vertical; min-height: 140px; }
 
+.form-status {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius);
+  font-size: 0.92rem;
+  background: #f4f5f7;
+  border: 1px solid var(--color-border);
+}
+.form-status.success {
+  background: #eaf6ec;
+  border-color: #9ccaa6;
+  color: #245c32;
+}
+.form-status.error {
+  background: #fdecea;
+  border-color: #e0a19b;
+  color: #8a2b21;
+}
+
 /* ---------- Footer ---------- */
 .site-footer {
   background: var(--color-navy-dark);
