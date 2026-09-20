@@ -22,7 +22,7 @@ association), adapted for Michigan.
   - [Everything Google this site touches](#everything-google-this-site-touches)
   - [Part 1 — Pick the Google account first](#part-1--pick-the-google-account-first)
   - [Part 2 — Contact form](#part-2--contact-form-the-one-that-isnt-built-yet)
-  - [Part 3 — The published CSV sheets](#part-3--the-two-published-csv-sheets-meetings--deans)
+  - [Part 3 — The meetings sheet](#part-3--the-meetings-sheet-published-csv)
   - [Part 4 — Hosting and domain](#part-4--hosting-and-domain)
   - [If something breaks](#if-something-breaks)
 - [Day-to-day maintenance](#day-to-day-maintenance-after-setup) — ongoing behavior
@@ -74,7 +74,7 @@ never touch code. Work through the parts in order — Part 1 is a prerequisite f
 
 | Google service | Used for | Needs setup? |
 |---|---|---|
-| Google Sheets | Meeting dates, deans directory, contact form submissions | Yes — Parts 2 and 3 |
+| Google Sheets | Meeting dates, contact form submissions | Yes — Parts 2 and 3 |
 | Google Apps Script | The contact form backend that writes into the submissions sheet | Yes — Part 2 |
 | Gmail (`MailApp`) | Emailing a notification whenever the contact form is submitted | No — comes with the script |
 | Google Fonts | The site's two typefaces (Source Serif 4, Inter) on all 8 pages | No — no account, nothing to configure |
@@ -87,20 +87,18 @@ Google Fonts needs no account, but it does mean every visitor's browser makes a 
 `fonts.googleapis.com`. If MACTE ever wants zero third-party requests, the two fonts can be
 downloaded into `assets/` and served from the site instead. Not urgent.
 
-### The three sheets at a glance
+### The two sheets at a glance
 
 | What | Direction | Sheet headers (order matters) | URL lives in |
 |---|---|---|---|
 | Meeting dates | Site **reads** sheet | `Date, Time, Location, Focus` | `js/meetings-data.js` → `MEETINGS_SHEET_CSV_URL` |
-| Deans directory | Site **reads** sheet | `Institution, Dean / Director, Email, Phone` | `js/deans-data.js` → `DEANS_SHEET_CSV_URL` |
 | Contact form | Site **writes** to sheet | `Timestamp, Name, Email, Institution, Message` | `js/contact-form.js` → `CONTACT_ENDPOINT_URL` |
 
-The first two are plain "publish to web" CSV links (Part 3). The third needs an Apps Script
+The first is a plain "publish to web" CSV link (Part 3). The second needs an Apps Script
 because a website can't write into a spreadsheet without one (Part 2).
 
-**Recommended: keep contact submissions in its own separate spreadsheet.** Meetings and deans
-can share one spreadsheet as two tabs if that's easier for officers to find, but submissions
-should stand alone for two reasons:
+**Use two separate spreadsheets, not two tabs in one.** Contact submissions should stand alone
+for two reasons:
 
 - Share access is per-spreadsheet, so combining them means every officer who edits meeting
   dates can also read everyone's contact messages.
@@ -167,23 +165,19 @@ This is the only part that isn't already live. Takes about 15 minutes.
     a new row appears in the sheet, a green confirmation shows on the page, and the
     notification email arrives. Delete the test row afterward.
 
-### Part 3 — The two published CSV sheets (meetings + deans)
+### Part 3 — The meetings sheet (published CSV)
 
-These already work, but they're published from whatever account created them. If that isn't
-the MACTE account from Part 1, recreate them under it now rather than later.
-
-Run through 3a–3d once for the **meetings** sheet, then again for the **deans** sheet. The
-only difference between them is the header row and which JS file the URL goes into.
+This already works, but it's published from whatever account created it. If that isn't the
+MACTE account from Part 1, recreate it under that account now rather than later.
 
 **3a. Set up the sheet**
 
 1. Signed in as the MACTE account, create the sheet (or open the existing one).
 2. Put the headers in **row 1**, one per column, in exactly this order:
-   - Meetings: `Date` · `Time` · `Location` · `Focus`
-   - Deans: `Institution` · `Dean / Director` · `Email` · `Phone`
-3. Enter one record per row below it. Leave no completely empty column between them.
+   `Date` · `Time` · `Location` · `Focus`
+3. Enter one meeting per row below it. Leave no completely empty column between them.
 
-Three rules to pass along to whoever maintains these, because breaking them breaks the site:
+Three rules to pass along to whoever maintains it, because breaking them breaks the site:
 
 - **Don't reorder, insert, or delete columns.** The site reads columns by *position*, not by
   header name. Renaming a header is harmless; moving a column shifts every value into the
@@ -215,9 +209,8 @@ CSV parser handles all of those.
 
 **3c. Paste the link into the site**
 
-8. Open the matching file and replace the URL between the quotes:
-   - Meetings → [`js/meetings-data.js`](js/meetings-data.js), `MEETINGS_SHEET_CSV_URL`
-   - Deans → [`js/deans-data.js`](js/deans-data.js), `DEANS_SHEET_CSV_URL`
+8. Open [`js/meetings-data.js`](js/meetings-data.js) and replace the URL between the quotes on
+   `MEETINGS_SHEET_CSV_URL`.
 9. Commit and push, then check the live page.
 
 **3d. Give the officers edit access**
@@ -235,8 +228,8 @@ CSV parser handles all of those.
 
 Finally, a privacy note worth saying out loud in the room: publishing to web makes that tab
 readable by anyone with the link, and it's not indexed-proof. That's fine for meeting dates,
-but the deans directory holds names, emails, and phone numbers — confirm MACTE is comfortable
-with those being public before publishing, and keep anything sensitive out of these sheets.
+but it means nothing sensitive should ever go in a published sheet — no member contact details,
+no dues records, no internal notes.
 
 ### Part 4 — Hosting and domain
 
@@ -255,7 +248,7 @@ Netlify should also be under a MACTE-owned login, for the same reason as Part 1.
 | Form says "couldn't be sent" | Script not deployed as "Anyone", or the `Submissions` tab was renamed |
 | Rows save but no email arrives | Gmail send quota (100/day free, 1500/day Workspace), or `NOTIFY_EMAIL` is wrong |
 | Script edits have no effect | Saving isn't deploying — **Deploy → Manage deployments → edit (pencil) → New version** |
-| Meeting dates or deans table empty | Sheet was recreated and needs republishing; the old CSV URL is dead |
+| Meetings table empty | Sheet was recreated and needs republishing; the old CSV URL is dead |
 
 ## Day-to-day maintenance (after setup)
 
@@ -271,10 +264,6 @@ Officers add/edit/remove rows in the meetings sheet — no code changes, no rede
 - Rows display in sheet order, so keep them sorted chronologically.
 - If the sheet is unreachable, `meetings.html` shows an error notice and the homepage card
   fails silently, keeping the placeholder text in `index.html`.
-
-### Deans directory
-
-Same deal — edit rows in the deans sheet and `executive-board.html` picks them up on next load.
 
 ### Contact form
 
