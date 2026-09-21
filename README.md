@@ -23,7 +23,8 @@ association), adapted for Michigan.
   - [Part 1 — Pick the Google account first](#part-1--pick-the-google-account-first)
   - [Part 2 — Contact form](#part-2--contact-form-the-one-that-isnt-built-yet)
   - [Part 3 — The meetings sheet](#part-3--the-meetings-sheet-published-csv)
-  - [Part 4 — Hosting and domain](#part-4--hosting-and-domain)
+  - [Part 4 — The executive board sheet and headshots](#part-4--the-executive-board-sheet-and-headshots)
+  - [Part 5 — Hosting and domain](#part-5--hosting-and-domain)
   - [If something breaks](#if-something-breaks)
 - [Day-to-day maintenance](#day-to-day-maintenance-after-setup) — ongoing behavior
 - [Replacing placeholder content](#replacing-placeholder-content)
@@ -46,9 +47,11 @@ js/meetings-data.js Fetches/parses the meetings Google Sheet, shared by index.ht
 js/meetings.js      Renders the full meeting table on meetings.html
 js/index-upcoming.js Renders the "Upcoming" preview card on index.html
 js/contact-form.js  Posts the contact.html form to the Apps Script endpoint
+js/board.js         Builds the officer cards (with headshots) on executive-board.html from a Google Sheet
 assets/             Logo (placeholder SVG) and other images
 documents/          PDFs referenced by bylaws.html and resources.html (see documents/README.md)
 apps-script/        Copy of the Google Apps Script deployed as the contact form backend
+templates/          Starter CSV to import when creating the executive board sheet
 ```
 
 Each page repeats the same header/nav and footer markup (no build step = no templating),
@@ -74,10 +77,11 @@ never touch code. Work through the parts in order — Part 1 is a prerequisite f
 
 | Google service | Used for | Needs setup? |
 |---|---|---|
-| Google Sheets | Meeting dates, contact form submissions | Yes — Parts 2 and 3 |
+| Google Sheets | Meeting dates, executive board, contact form submissions | Yes — Parts 2, 3, and 4 |
+| Google Drive | Executive board headshots | Yes — Part 4 |
 | Google Apps Script | The contact form backend that writes into the submissions sheet | Yes — Part 2 |
 | Gmail (`MailApp`) | Emailing a notification whenever the contact form is submitted | No — comes with the script |
-| Google Fonts | The site's two typefaces (Source Serif 4, Inter) on all 8 pages | No — no account, nothing to configure |
+| Google Fonts | The site's two typefaces (Source Serif 4, Inter) on all 7 pages | No — no account, nothing to configure |
 
 There is **no** Google Analytics, Tag Manager, or reCAPTCHA on the site right now. If MACTE
 asks for visitor stats later, that's a separate decision — Netlify has built-in analytics that
@@ -87,18 +91,19 @@ Google Fonts needs no account, but it does mean every visitor's browser makes a 
 `fonts.googleapis.com`. If MACTE ever wants zero third-party requests, the two fonts can be
 downloaded into `assets/` and served from the site instead. Not urgent.
 
-### The two sheets at a glance
+### The sheets at a glance
 
-| What | Direction | Sheet headers (order matters) | URL lives in |
+| What | Direction | Sheet headers | URL lives in |
 |---|---|---|---|
-| Meeting dates | Site **reads** sheet | `Date, Time, Location, Focus` | `js/meetings-data.js` → `MEETINGS_SHEET_CSV_URL` |
+| Meeting dates | Site **reads** sheet | `Date, Time, Location, Focus` (order matters) | `js/meetings-data.js` → `MEETINGS_SHEET_CSV_URL` |
+| Executive board | Site **reads** sheet | `Role, Name, Title, Institution, Photo` (any order) | `js/board.js` → `BOARD_SHEET_CSV_URL` |
 | Contact form | Site **writes** to sheet | `Timestamp, Name, Email, Institution, Message` | `js/contact-form.js` → `CONTACT_ENDPOINT_URL` |
 
-The first is a plain "publish to web" CSV link (Part 3). The second needs an Apps Script
-because a website can't write into a spreadsheet without one (Part 2).
+The two the site reads are plain "publish to web" CSV links (Parts 3 and 4). The contact form
+needs an Apps Script because a website can't write into a spreadsheet without one (Part 2).
 
-**Use two separate spreadsheets, not two tabs in one.** Contact submissions should stand alone
-for two reasons:
+**Use separate spreadsheets, not tabs in one.** Contact submissions especially should stand
+alone, for two reasons:
 
 - Share access is per-spreadsheet, so combining them means every officer who edits meeting
   dates can also read everyone's contact messages.
@@ -231,7 +236,75 @@ readable by anyone with the link, and it's not indexed-proof. That's fine for me
 but it means nothing sensitive should ever go in a published sheet — no member contact details,
 no dues records, no internal notes.
 
-### Part 4 — Hosting and domain
+### Part 4 — The executive board sheet and headshots
+
+Same publish-to-web approach as the meetings sheet, plus a Drive folder for photos. About
+15 minutes. This is what lets officers change who's on the board, and their photos, without
+touching HTML.
+
+**4a. Create the sheet**
+
+1. Signed in as the MACTE account, create a new Google Sheet named *MACTE Executive Board*.
+2. **File → Import → Upload** and choose [`templates/executive-board.csv`](templates/executive-board.csv)
+   from this repo, with **Import location: Replace spreadsheet**. That fills in the headers and
+   the current board. (Or type `Role` · `Name` · `Title` · `Institution` · `Photo` into row 1.)
+3. Replace the rows with the real board. One person per row; cards appear on the site in the
+   same order as the rows.
+
+Unlike the meetings sheet, this one matches columns **by header name**, so it's harder to break:
+
+- Columns can be in any order, and extra columns (e.g. `Term ends`) are ignored by the site.
+  Extra columns are still **published**, though, so nothing private goes in them.
+- The five header names must stay spelled the same. Capitalization and stray spaces don't matter.
+- `Title`, `Institution`, and `Photo` can be left blank. A row with no `Name` is skipped.
+
+**4b. Set up the headshots folder**
+
+4. In the MACTE account's Google Drive, create a folder named *MACTE Headshots*.
+5. **Share → General access → Anyone with the link → Viewer.** Photos added to the folder
+   inherit this, so officers never have to share photos one at a time. Without it, photos
+   won't show on the site.
+6. Also share the folder with the officers as **Editors** so they can upload.
+
+Keep headshots in this MACTE-owned folder, not in officers' personal Drives. A photo that lives
+in a departing officer's Drive vanishes from the site when they clean up their files.
+
+**4c. Publish and connect the sheet**
+
+7. Publish the tab exactly as in [3b](#part-3--the-meetings-sheet-published-csv): **File →
+   Share → Publish to web**, pick the tab (not "Entire document") and **Comma-separated values
+   (.csv)**, and copy the link ending in `output=csv`.
+8. Paste it between the quotes on `BOARD_SHEET_CSV_URL` in [`js/board.js`](js/board.js),
+   then commit and push.
+
+**4d. Give the officers edit access**
+
+9. **Share** the sheet with the officers as **Editors**.
+10. Add a second tab named `How to edit` and paste in the officer instructions below. Only the
+    board tab is published, so this tab stays private.
+
+**Officer instructions** (paste into the `How to edit` tab):
+
+> **Changing the board:** edit, add, or delete rows. Each row is one person. The website
+> updates within about 5 minutes. Refresh the page to see it.
+>
+> **Adding a headshot:**
+> 1. Upload the photo into the *MACTE Headshots* folder in Google Drive.
+> 2. Right-click the photo → **Share → Copy link**.
+> 3. Paste the link into that person's `Photo` cell.
+>
+> Any photo works. The site crops it into a circle, so a roughly square photo with the face
+> near the top-middle looks best. If a photo can't load, the site shows the person's initials
+> instead. Initials usually mean the photo isn't in the *MACTE Headshots* folder.
+>
+> **Please don't rename the headers in row 1** (Role, Name, Title, Institution, Photo).
+
+One caveat: the site turns Drive share links into images using Drive's thumbnail address, which
+Google uses widely but doesn't formally document. If Google ever changes it, every card falls
+back to initials rather than showing broken images. The fix would be a small change in
+`photoSource()` in `js/board.js`.
+
+### Part 5 — Hosting and domain
 
 1. Connect the GitHub repo to Netlify (or drag-drop the folder). No build command —
    `netlify.toml` already sets `publish = "."`.
@@ -249,6 +322,11 @@ Netlify should also be under a MACTE-owned login, for the same reason as Part 1.
 | Rows save but no email arrives | Gmail send quota (100/day free, 1500/day Workspace), or `NOTIFY_EMAIL` is wrong |
 | Script edits have no effect | Saving isn't deploying — **Deploy → Manage deployments → edit (pencil) → New version** |
 | Meetings table empty | Sheet was recreated and needs republishing; the old CSV URL is dead |
+| Board says "isn't connected yet" | `BOARD_SHEET_CSV_URL` is still blank — Part 4c |
+| Every card shows initials, no photos | Headshots folder isn't shared "Anyone with the link" — Part 4b |
+| One card shows initials | That photo isn't in the shared folder, or the link in its `Photo` cell is wrong |
+| A field is blank on every card | That column's header in row 1 was renamed or misspelled |
+| A person is missing | Their `Name` cell is empty, or the `Name` header was renamed |
 
 ## Day-to-day maintenance (after setup)
 
@@ -264,6 +342,12 @@ Officers add/edit/remove rows in the meetings sheet — no code changes, no rede
 - Rows display in sheet order, so keep them sorted chronologically.
 - If the sheet is unreachable, `meetings.html` shows an error notice and the homepage card
   fails silently, keeping the placeholder text in `index.html`.
+
+### Executive board
+
+Officers edit the executive board sheet and drop photos in the *MACTE Headshots* folder, following the
+instructions on the sheet's `How to edit` tab. No code changes, no redeploy. The Committees
+and Past Presidents sections of `executive-board.html` are still plain HTML.
 
 ### Contact form
 
@@ -301,7 +385,7 @@ Officers add/edit/remove rows in the meetings sheet — no code changes, no rede
 
 ## Hosting
 
-Setup steps are in [Part 4](#part-4--hosting-and-domain) above. In short: Netlify is the
+Setup steps are in [Part 5](#part-5--hosting-and-domain) above. In short: Netlify is the
 planned host, connected to the GitHub repo with no build command (`netlify.toml` sets
 `publish = "."`), with `macte.us` pointed at it from GoDaddy.
 
