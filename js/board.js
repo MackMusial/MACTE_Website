@@ -3,7 +3,7 @@
 // the officer-facing rules are in README.md, "Part 4 — The executive board sheet and headshots".
 
 // Paste the sheet's published CSV link here (must end in output=csv).
-const BOARD_SHEET_CSV_URL = "";
+const BOARD_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vStQrWY-UwLGd7P0wBUHY7X4uEouQnNddASbzKFWFr5mlNHWo9IN1xHPwk1SrQRkPhnTC_KwdToMiGr/pub?gid=0&single=true&output=csv";
 
 // Columns are found by header name, not position, so officers can reorder
 // columns or add their own (e.g. "Notes") without breaking the page.

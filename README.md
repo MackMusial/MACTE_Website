@@ -8,9 +8,6 @@ Static website for the **Michigan Association of Colleges for Teacher Education 
 a not-for-profit AACTE state affiliate. Built as plain HTML/CSS/JS so it can be hosted
 anywhere without a build step — Netlify, SVSU web hosting, or elsewhere.
 
-Modeled in tone and structure after [mytacte.org](https://mytacte.org) (Texas's equivalent
-association), adapted for Michigan.
-
 **Setting this up with MACTE for the first time? Go straight to the
 [Setup walkthrough](#setup-walkthrough-doing-this-with-macte).**
 
@@ -26,6 +23,7 @@ association), adapted for Michigan.
   - [Part 4 — The executive board sheet and headshots](#part-4--the-executive-board-sheet-and-headshots)
   - [Part 5 — Hosting and domain](#part-5--hosting-and-domain)
   - [If something breaks](#if-something-breaks)
+- [Handoff checklist](#handoff-checklist-transferring-the-site-to-macte) — **giving MACTE full ownership**
 - [Day-to-day maintenance](#day-to-day-maintenance-after-setup) — ongoing behavior
 - [Replacing placeholder content](#replacing-placeholder-content)
 - [Hosting](#hosting)
@@ -56,16 +54,6 @@ templates/          Starter CSV to import when creating the executive board shee
 
 Each page repeats the same header/nav and footer markup (no build step = no templating),
 so when editing shared header/footer content, update it across all 7 HTML files.
-
-## Local preview
-
-No build tools required — just open `index.html` in a browser, or serve the folder locally:
-
-```bash
-# from the project folder
-python -m http.server 8000
-# then visit http://localhost:8000
-```
 
 ## Setup walkthrough (doing this with MACTE)
 
@@ -125,7 +113,7 @@ Why it matters: officers rotate annually. If these live in a departing officer's
 meeting dates stop updating and **contact form submissions are lost with no error shown on the
 site**. Moving them later means redoing every step below.
 
-### Part 2 — Contact form (the one that isn't built yet)
+### Part 2 — Contact form 
 
 This is the only part that isn't already live. Takes about 15 minutes.
 
@@ -293,6 +281,10 @@ in a departing officer's Drive vanishes from the site when they clean up their f
 > 2. Right-click the photo → **Share → Copy link**.
 > 3. Paste the link into that person's `Photo` cell.
 >
+> The cell should show a link (starting `https://drive.google.com/...`), not a picture. That's
+> correct: the photo stays in Drive and the site loads it from there. **Don't use Insert → Image**
+> to put the photo inside the cell. The website can't see pictures placed in cells.
+>
 > Any photo works. The site crops it into a circle, so a roughly square photo with the face
 > near the top-middle looks best. If a photo can't load, the site shows the person's initials
 > instead. Initials usually mean the photo isn't in the *MACTE Headshots* folder.
@@ -328,6 +320,64 @@ Netlify should also be under a MACTE-owned login, for the same reason as Part 1.
 | A field is blank on every card | That column's header in row 1 was renamed or misspelled |
 | A person is missing | Their `Name` cell is empty, or the `Name` header was renamed |
 
+## Handoff checklist (transferring the site to MACTE)
+
+This hands the entire site to MACTE, with no ongoing involvement from the original developer.
+Do it in one sitting with the officer who controls MACTE's accounts. **The order matters:** set up
+MACTE's accounts, move everything, test it, and only then remove the developer's access.
+
+**1. MACTE's accounts**
+
+- [ ] A Google account MACTE controls (e.g. `MichMACTE@gmail.com`) that **at least two officers**
+      can sign into. Set its recovery email and phone to officers, not the developer.
+- [ ] A free GitHub account signed up with that email.
+- [ ] A free Netlify account signed up with that email.
+- [ ] The GoDaddy account that holds `macte.us` belongs to MACTE.
+
+**2. Move the code**
+
+- [ ] On GitHub, in this repo: **Settings → General → Danger Zone → Transfer ownership**, and
+      enter MACTE's GitHub username. MACTE accepts from the email GitHub sends. Old links redirect.
+- [ ] The "Current construction build" link at the top of this README points at the developer's
+      GitHub Pages address. Update or remove it once `macte.us` is live.
+
+**3. Move the Google pieces** (the meetings sheet, board sheet, headshots folder, and contact
+submissions sheet)
+
+- [ ] Share each with the MACTE account as **Editor**, then open **Share**, click the dropdown
+      next to MACTE's name, and choose **Transfer ownership**. MACTE accepts. If that option isn't
+      offered, recreate the item under MACTE's account using its setup Part above.
+- [ ] Meetings and board sheets: signed in as MACTE, open **File → Share → Publish to web** and
+      confirm each is still published. If a published link changed, paste the new one into
+      `js/meetings-data.js` or `js/board.js`.
+- [ ] Contact form: the running script still sends as the developer until it's redeployed.
+      Signed in as MACTE, open the sheet's **Extensions → Apps Script**, then follow Part 2c to make
+      a new deployment. Paste the new `/exec` URL into `js/contact-form.js`. Then open
+      **Deploy → Manage deployments** and archive the old deployment.
+- [ ] Set `NOTIFY_EMAIL` to the address MACTE wants, in both the Apps Script editor and
+      `apps-script/contact-form.gs`.
+
+**4. Hosting and domain.** Follow [Part 5](#part-5--hosting-and-domain), signed in as MACTE.
+
+**5. Test on the live site**
+
+- [ ] Contact form: a row appears in the submissions sheet and the email arrives at MACTE's address.
+- [ ] Meetings: edit a row, and it shows on the site within about 5 minutes.
+- [ ] Board: add a headshot link, and the photo shows on the site.
+
+**6. Walk one officer through it**
+
+- [ ] Editing the meetings sheet.
+- [ ] Editing the board sheet and adding a headshot (the `How to edit` tab).
+- [ ] Where contact form messages arrive, and where the full record is kept (the submissions sheet).
+- [ ] [Changing page text](#changing-page-text) on GitHub.
+
+**7. Remove the developer.** Only after step 5 passes.
+
+- [ ] Remove the developer from the GitHub repo's collaborators and from the Netlify team.
+- [ ] Remove the developer from the share list of every sheet and the headshots folder.
+- [ ] Make sure the developer's personal email isn't a recovery address on any MACTE account.
+
 ## Day-to-day maintenance (after setup)
 
 One-time setup is the walkthrough above. This is the ongoing behavior worth knowing.
@@ -348,6 +398,25 @@ Officers add/edit/remove rows in the meetings sheet — no code changes, no rede
 Officers edit the executive board sheet and drop photos in the *MACTE Headshots* folder, following the
 instructions on the sheet's `How to edit` tab. No code changes, no redeploy. The Committees
 and Past Presidents sections of `executive-board.html` are still plain HTML.
+
+### Changing page text
+
+Anything that isn't meetings or the board (wording on a page, dues amounts, committee
+descriptions) is edited directly on GitHub. No software to install.
+
+1. Sign in to GitHub as MACTE and open this repository.
+2. Click the page's file, e.g. `membership.html` for the Membership page.
+3. Click the **pencil icon** (Edit this file).
+4. Change only the words between the tags. Leave everything inside `<` and `>` alone.
+   For example, in `<p>Annual dues are $150.</p>`, change only `Annual dues are $150.`
+5. Click **Commit changes**, add a short note about what you changed, and confirm.
+
+Netlify republishes the site automatically within a minute or two.
+
+- The navigation menu and footer are copied into all 7 page files. Changing them means making
+  the same edit in every file.
+- Every change is saved in the file's **History**. If an edit breaks a page, open History, find
+  the version before it, and copy that text back in.
 
 ### Contact form
 
