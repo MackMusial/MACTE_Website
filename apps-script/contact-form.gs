@@ -17,7 +17,7 @@
  */
 
 const SHEET_NAME = "Submissions";
-const NOTIFY_EMAIL = "info@macte.us";
+const NOTIFY_EMAIL = "MichMACTE@gmail.com";
 
 function doPost(e) {
   try {

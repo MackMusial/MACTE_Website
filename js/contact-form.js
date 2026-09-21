@@ -4,7 +4,7 @@
 // apps-script/contact-form.gs.
 
 // Paste the Apps Script web app /exec URL here after deploying it.
-const CONTACT_ENDPOINT_URL = "";
+const CONTACT_ENDPOINT_URL = "https://script.google.com/macros/s/AKfycby12PyG8tdWrCkeXaJJI8sDcH1VlweNXxkUE-7dauQ18FdWG_XT9CTtVT_j5Gx6Hwqd/exec";
 
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("contact-form");
