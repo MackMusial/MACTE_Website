@@ -296,8 +296,9 @@ Officers add/edit/remove rows in the meetings sheet — no code changes, no rede
    If MACTE provides an updated/vector logo later, regenerate these the same way (crop to content,
    then a light/dark variant of each) rather than just swapping one file, since several pages
    reference the different variants for different backgrounds.
-4. **Contact email/address**: update the placeholder `info@macte.us` and mailing address in
-   `contact.html` and in the footer block on every page.
+4. **Contact email**: update the placeholder `info@macte.us` in `contact.html` and in the
+   footer block on every page. MACTE doesn't publish a mailing address, so the contact page
+   lists email and the form only.
 
 ## Hosting
 
