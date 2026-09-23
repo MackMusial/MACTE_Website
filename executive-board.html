@@ -47,42 +47,13 @@
 
     <section class="section">
       <div class="container">
-        <div class="notice">Placeholder content — officer names and institutions below are examples and will be replaced with current MACTE leadership.</div>
-
         <div class="section-header">
           <span class="eyebrow">Officers</span>
-          <h2>2026&ndash;2027 Executive Board</h2>
+          <h2>Current Executive Board</h2>
         </div>
-        <div class="card-grid">
-          <div class="card">
-            <h3>President</h3>
-            <p><strong>Marcia Fetters</strong><br />Example Title<br />Sample University</p>
-          </div>
-          <div class="card">
-            <h3>Past President</h3>
-            <p><strong>Beth Kubitskey</strong><br />Example Title<br />Sample University</p>
-          </div>
-          <div class="card">
-            <h3>Past President</h3>
-            <p><strong>Anne Tapp-Jaksa</strong><br />Example Title<br />Saginaw Valley State University</p>
-          </div>
-          <div class="card">
-            <h3>Board Member</h3>
-            <p><strong>Gail Richmond</strong><br />Example Title<br />Sample University</p>
-          </div>
-          <div class="card">
-            <h3>Board Member</h3>
-            <p><strong>Jillian Davision</strong><br />Example Title<br />Sample University</p>
-          </div>
-          <div class="card">
-            <h3>Board Member</h3>
-            <p><strong>John Walcott</strong><br />Example Title<br />Sample University</p>
-          </div>
-          <div class="card">
-            <h3>Board Member</h3>
-            <p><strong>Luana Greulich</strong><br />Example Title<br />Sample University</p>
-          </div>
-        </div>
+        <!-- Cards are built by js/board.js from the executive board Google Sheet. -->
+        <div id="board-notice" class="notice">Loading executive board&hellip;</div>
+        <div id="board-grid" class="card-grid"></div>
       </div>
     </section>
 
@@ -149,7 +120,7 @@
         <div>
           <h4>Contact</h4>
           <ul>
-            <li><a href="mailto:info@macte.us">info@macte.us</a></li>
+            <li><a href="mailto:MichMACTE@gmail.com">MichMACTE@gmail.com</a></li>
             <li><a href="contact.html">Contact form</a></li>
             <li><a href="https://www.aacte.org" target="_blank" rel="noopener">AACTE (national)</a></li>
           </ul>
@@ -163,5 +134,7 @@
   </footer>
 
   <script src="js/main.js"></script>
+  <script src="js/csv-utils.js"></script>
+  <script src="js/board.js"></script>
 </body>
 </html>

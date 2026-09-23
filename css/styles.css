@@ -247,6 +247,31 @@ p { margin: 0 0 1rem; }
 .card h3 { margin-bottom: 0.5rem; }
 .card p:last-child { margin-bottom: 0; }
 
+/* Officers upload photos of any shape; cover-crop into a circle, biased toward
+   the top of the frame where faces usually are. */
+.board-photo,
+.board-avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+}
+.board-photo {
+  object-fit: cover;
+  object-position: center 25%;
+  background: var(--color-border);
+}
+.board-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-navy);
+  color: var(--color-gold-light);
+  font-family: var(--font-serif);
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
 /* ---------- Tables ---------- */
 .table-wrap { overflow-x: auto; }
 table {

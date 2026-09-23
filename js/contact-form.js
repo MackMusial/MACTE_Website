@@ -1,10 +1,10 @@
 // Sends the contact.html form to a Google Apps Script web app, which appends
-// the message to the MACTE submissions sheet and emails info@macte.us.
+// the message to the MACTE submissions sheet and emails MichMACTE@gmail.com.
 // The matching server-side code and its deployment steps are in
 // apps-script/contact-form.gs.
 
 // Paste the Apps Script web app /exec URL here after deploying it.
-const CONTACT_ENDPOINT_URL = "";
+const CONTACT_ENDPOINT_URL = "https://script.google.com/macros/s/AKfycby12PyG8tdWrCkeXaJJI8sDcH1VlweNXxkUE-7dauQ18FdWG_XT9CTtVT_j5Gx6Hwqd/exec";
 
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("contact-form");
@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
     event.preventDefault();
 
     if (!CONTACT_ENDPOINT_URL) {
-      setStatus("This form isn't connected yet. Please email info@macte.us directly.", "error");
+      setStatus("This form isn't connected yet. Please email MichMACTE@gmail.com directly.", "error");
       return;
     }
 
@@ -32,11 +32,11 @@ document.addEventListener("DOMContentLoaded", () => {
       .then((data) => {
         if (data.result !== "ok") throw new Error(data.message || "Submission failed");
         form.reset();
-        setStatus("Thanks — your message was sent. An officer will follow up soon.", "success");
+        setStatus("Thanks — your message was sent. We will follow up soon.", "success");
       })
       .catch(() => {
         setStatus(
-          "Sorry, your message couldn't be sent. Please email info@macte.us directly.",
+          "Sorry, your message couldn't be sent. Please email MichMACTE@gmail.com directly.",
           "error"
         );
       })
