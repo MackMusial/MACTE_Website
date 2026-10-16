@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <!-- Temporary review page for the board's color decision. Not linked from the menu. Delete once a scheme is chosen. -->
+  <link rel="icon" href="assets/favicon-32.png" type="image/png" />
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+<title>MACTE Color Options</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap">
+<style>
+/* Layout: a stacked review sheet. Each option is a labelled row: name and notes, swatches, then a live mock of the MACTE home page in that palette. */
+:root {
+  --bg: #f3f3f1;
+  --surface: #ffffff;
+  --fg: #1d2127;
+  --muted: #5d636d;
+  --line: #dddfe3;
+  --chip: #e9eaec;
+  --flag: #8a2b21;
+  --flag-bg: #fbeceb;
+  --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #17191c; --surface: #202328; --fg: #eceef1; --muted: #a2a8b2;
+    --line: #33373e; --chip: #2b2f35; --flag: #f2a59c; --flag-bg: #3a2220;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #17191c; --surface: #202328; --fg: #eceef1; --muted: #a2a8b2;
+  --line: #33373e; --chip: #2b2f35; --flag: #f2a59c; --flag-bg: #3a2220;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg); color: var(--fg);
+  font-family: var(--sans); font-size: 15px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 40px 64px;
+}
+.wrap { max-width: 1040px; margin: 0 auto; display: grid; gap: 56px; }
+
+header.intro { display: grid; gap: 14px; max-width: 68ch; }
+.kicker { font-size: 12px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+h1.page { font-family: var(--serif); font-size: clamp(30px, 5vw, 42px); line-height: 1.12; margin: 0; text-wrap: balance; }
+.intro p { margin: 0; color: var(--muted); }
+.jump { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.jump a {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 12px 6px 8px; border-radius: 999px; background: var(--chip);
+  color: var(--fg); text-decoration: none; font-size: 13px; font-weight: 500;
+}
+.jump a:hover { outline: 1px solid var(--line); }
+.jump a:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
+.dot { width: 16px; height: 16px; border-radius: 50%; display: inline-block; flex: none; }
+
+section.opt { display: grid; gap: 18px; scroll-margin-top: 24px; }
+.opt-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 24px; align-items: end; }
+.letter { font-size: 12px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.opt h2 { font-family: var(--serif); font-size: 26px; line-height: 1.2; margin: 2px 0 0; text-wrap: balance; }
+.opt .desc { grid-column: 1 / -1; margin: 0; max-width: 72ch; color: var(--muted); }
+.flag {
+  justify-self: end; font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px;
+  background: var(--flag-bg); color: var(--flag);
+}
+.swatches { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+.sw { display: grid; gap: 6px; min-width: 0; }
+.sw i { display: block; height: 44px; border-radius: 6px; border: 1px solid var(--line); }
+.sw b { font-size: 12px; font-weight: 600; }
+.sw code { font-size: 12px; color: var(--muted); font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; }
+
+/* ---------- Mock of the MACTE home page. Colors come from per-option variables on .mock ---------- */
+.mock {
+  border-radius: 10px; overflow: hidden; border: 1px solid var(--line);
+  background: var(--m-bg); color: #1f2430; font-family: var(--sans); font-size: 14px;
+  box-shadow: 0 6px 24px rgba(0,0,0,.08);
+}
+.m-nav { background: var(--m-dark); display: flex; align-items: center; gap: 20px; padding: 12px 22px; }
+.m-logo { display: flex; align-items: center; gap: 10px; color: #fff; font-family: var(--serif); font-weight: 700; font-size: 18px; letter-spacing: .02em; }
+.m-mark { width: 28px; height: 29px; flex: none; background: url("assets/macte-icon-white.png") center / contain no-repeat; }
+.m-logo small { display: block; font-family: var(--sans); font-weight: 400; font-size: 10px; letter-spacing: 0; opacity: .75; }
+.m-links { display: flex; gap: 16px; margin-left: auto; font-size: 12.5px; color: var(--m-tint); white-space: nowrap; }
+.m-links span:first-child { color: #fff; border-bottom: 2px solid var(--m-acc); padding-bottom: 2px; }
+.m-cta { background: var(--m-btn-bg); color: var(--m-btn-fg); font-weight: 600; font-size: 12.5px; padding: 6px 12px; border-radius: 6px; white-space: nowrap; }
+
+.m-hero {
+  background: linear-gradient(135deg, var(--m-deep), var(--m-dark) 60%, var(--m-light));
+  color: #fff; padding: 40px 22px; display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 28px; align-items: center;
+}
+.m-eyebrow { text-transform: uppercase; letter-spacing: .08em; font-size: 11px; font-weight: 600; color: var(--m-acc); margin-bottom: 8px; }
+.m-hero h3 { font-family: var(--serif); font-size: clamp(22px, 3.2vw, 30px); line-height: 1.15; margin: 0 0 12px; color: #fff; text-wrap: balance; }
+.m-hero p { margin: 0 0 18px; color: var(--m-tint); max-width: 48ch; }
+.m-btns { display: flex; flex-wrap: wrap; gap: 10px; }
+.m-btn { padding: 9px 16px; border-radius: 6px; font-weight: 600; font-size: 13px; }
+.m-btn.primary { background: var(--m-btn-bg); color: var(--m-btn-fg); }
+.m-btn.outline { border: 1px solid rgba(255,255,255,.6); color: #fff; }
+.m-card { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.18); border-radius: 8px; padding: 16px 18px; min-width: 0; }
+.m-card .m-eyebrow { margin-bottom: 10px; }
+.m-event { display: grid; gap: 2px; padding-block: 8px; border-top: 1px solid rgba(255,255,255,.14); }
+.m-event:first-of-type { border-top: 0; padding-top: 0; }
+.m-event b { color: #fff; font-size: 13px; }
+.m-event span { color: var(--m-tint); font-size: 12px; }
+
+.m-body { padding: 32px 22px 36px; display: grid; gap: 16px; }
+.m-body .m-eyebrow { color: var(--m-acc-deep); margin: 0; }
+.m-body h4 { font-family: var(--serif); font-size: 22px; line-height: 1.2; margin: 0; color: var(--m-dark); text-wrap: balance; }
+.m-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.m-feat { background: #fff; border: 1px solid #e2e4e8; border-radius: 6px; padding: 16px; display: grid; gap: 6px; align-content: start; }
+.m-feat .ic { width: 30px; height: 30px; border-radius: 6px; background: var(--m-dark); display: grid; place-items: center; }
+.m-feat .ic i { width: 10px; height: 10px; border-radius: 2px; background: var(--m-acc); display: block; }
+.m-feat b { font-family: var(--serif); font-size: 16px; color: var(--m-dark); }
+.m-feat p { margin: 0; font-size: 12.5px; color: #5b6270; }
+.m-link { font-weight: 600; font-size: 13px; color: var(--m-acc-deep); }
+
+.m-foot { background: var(--m-deep); color: var(--m-tint); padding: 16px 22px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 20px; font-size: 12px; }
+.m-foot b { color: #fff; font-weight: 600; }
+
+.notes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 28px; }
+.notes div { display: grid; gap: 2px; min-width: 0; }
+.notes h5 { margin: 0; font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.notes p { margin: 0; }
+
+.avoid { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 22px 24px; display: grid; gap: 12px; }
+.avoid h2 { font-family: var(--serif); font-size: 22px; margin: 0; }
+.avoid p { margin: 0; color: var(--muted); max-width: 70ch; }
+.table-scroll { overflow-x: auto; }
+.avoid table { border-collapse: collapse; width: 100%; font-size: 14px; }
+.avoid th, .avoid td { text-align: left; padding: 8px 10px; border-top: 1px solid var(--line); vertical-align: middle; }
+.avoid th { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; border-top: 0; }
+.pair { display: inline-flex; gap: 4px; vertical-align: middle; }
+.pair i { width: 14px; height: 14px; border-radius: 3px; display: block; border: 1px solid var(--line); }
+
+@media (max-width: 760px) {
+  .m-links { display: none; }
+  .m-nav { justify-content: space-between; }
+  .m-hero { grid-template-columns: minmax(0, 1fr); padding: 28px 18px; }
+  .m-cards { grid-template-columns: minmax(0, 1fr); }
+  .m-body { padding: 24px 18px 28px; }
+  .swatches { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .notes { grid-template-columns: minmax(0, 1fr); }
+  .opt-head { grid-template-columns: minmax(0, 1fr); }
+  .flag { justify-self: start; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+html { scroll-behavior: smooth; }
+.back { font-size: 13px; font-weight: 600; color: var(--fg); text-decoration: none; justify-self: start; }
+.back:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="intro">
+    <a class="back" href="index.html">← Back to the MACTE site</a>
+    <div class="kicker">MACTE website · Color review</div>
+    <h1 class="page">Four new color schemes for the MACTE site</h1>
+    <p>The current navy and gold read as University of Michigan maize and blue. Each option below shows the real home page in a new palette. Only the colors change. The layout, fonts, and white logo stay the same.</p>
+    <p>Every option avoids the color pairs that Michigan member universities use, so the site doesn't look like it belongs to any one school.</p>
+    <nav class="jump" aria-label="Jump to an option">
+      <a href="#current"><span class="dot" style="background:linear-gradient(90deg,#12294d 50%,#c9a227 50%)"></span>Current</a>
+      <a href="#teal"><span class="dot" style="background:linear-gradient(90deg,#0f4a52 50%,#f2a985 50%)"></span>A · Great Lakes Teal</a>
+      <a href="#cherry"><span class="dot" style="background:linear-gradient(90deg,#2c3036 50%,#a8213a 50%)"></span>B · Charcoal &amp; Cherry</a>
+      <a href="#plum"><span class="dot" style="background:linear-gradient(90deg,#3d2950 50%,#b3cfa6 50%)"></span>C · Plum &amp; Sage</a>
+      <a href="#slate"><span class="dot" style="background:linear-gradient(90deg,#36444f 50%,#9ed3c6 50%)"></span>D · Slate &amp; Sea Glass</a>
+    </nav>
+  </header>
+
+  <!-- Each option: --m-dark header, --m-deep footer/gradient start, --m-light gradient end, --m-acc accent on dark,
+       --m-acc-deep accent on light backgrounds, --m-btn-* primary button, --m-tint soft text on dark, --m-bg page background -->
+
+  <section class="opt" id="current">
+    <div class="opt-head">
+      <div><div class="letter">For reference</div><h2>Current: Navy &amp; Gold</h2></div>
+      <span class="flag">Reads as U of M</span>
+      <p class="desc">What the site uses today. Deep navy with a gold accent is very close to Michigan's maize and blue. The gold text on light backgrounds is also hard to read.</p>
+    </div>
+    <div class="swatches">
+      <div class="sw"><i style="background:#12294d"></i><b>Header</b><code>#12294D</code></div>
+      <div class="sw"><i style="background:#c9a227"></i><b>Accent</b><code>#C9A227</code></div>
+      <div class="sw"><i style="background:#0b1c36"></i><b>Footer</b><code>#0B1C36</code></div>
+      <div class="sw"><i style="background:#c9a227"></i><b>Accent on light</b><code>#C9A227</code></div>
+      <div class="sw"><i style="background:#f7f7f5"></i><b>Background</b><code>#F7F7F5</code></div>
+    </div>
+    <div class="mock" style="--m-dark:#12294d;--m-deep:#0b1c36;--m-light:#1e3a63;--m-acc:#c9a227;--m-acc-deep:#c9a227;--m-btn-bg:#c9a227;--m-btn-fg:#0b1c36;--m-tint:#d7dfee;--m-bg:#f7f7f5">
+      <div class="m-nav">
+        <div class="m-logo"><span class="m-mark" aria-hidden="true"></span><div>MACTE<small>Michigan Association of Colleges for Teacher Education</small></div></div>
+        <div class="m-links"><span>Home</span><span>Executive Board</span><span>Meeting Dates</span><span>Resources</span><span>Contact</span></div>
+        <div class="m-cta">Membership</div>
+      </div>
+      <div class="m-hero">
+        <div>
+          <div class="m-eyebrow">Michigan's AACTE State Affiliate</div>
+          <h3>Advancing Educator Preparation Across Michigan</h3>
+          <p>MACTE brings together deans, chairs, and directors of teacher education programs to strengthen educator preparation through collaboration, advocacy, and shared professional learning.</p>
+          <div class="m-btns"><span class="m-btn primary">Become a Member</span><span class="m-btn outline">Learn About MACTE</span></div>
+        </div>
+        <div class="m-card">
+          <div class="m-eyebrow">Upcoming</div>
+          <div class="m-event"><b>Fall Business Meeting</b><span>Example date · Lansing</span></div>
+          <div class="m-event"><b>Spring Business Meeting</b><span>Example date · Virtual</span></div>
+        </div>
+      </div>
+      <div class="m-body">
+        <div class="m-eyebrow">What We Do</div>
+        <h4>Supporting Michigan's Educator Preparation Community</h4>
+        <div class="m-cards">
+          <div class="m-feat"><div class="ic"><i></i></div><b>Advocacy</b><p>Representing Michigan's teacher preparation programs with the Michigan Department of Education.</p></div>
+          <div class="m-feat"><div class="ic"><i></i></div><b>Collaboration</b><p>Connecting deans, chairs, and directors to share best practices.</p></div>
+          <div class="m-feat"><div class="ic"><i></i></div><b>Professional Development</b><p>Meetings and workshops that support excellence in educator preparation.</p></div>
+        </div>
+        <span class="m-link">Meet Our Executive Board →</span>
+      </div>
+      <div class="m-foot"><b>MACTE</b><span>MichMACTE@gmail.com · AACTE (national)</span></div>
+    </div>
+  </section>
+
+  <section class="opt" id="teal">
+    <div class="opt-head">
+      <div><div class="letter">Option A</div><h2>Great Lakes Teal</h2></div>
+      <p class="desc">Deep lake teal with a warm copper accent. It feels calm and statewide, and it ties to Michigan's water without borrowing any school's colors.</p>
+    </div>
+    <div class="swatches">
+      <div class="sw"><i style="background:#0f4a52"></i><b>Header</b><code>#0F4A52</code></div>
+      <div class="sw"><i style="background:#f2a985"></i><b>Accent</b><code>#F2A985</code></div>
+      <div class="sw"><i style="background:#08333a"></i><b>Footer</b><code>#08333A</code></div>
+      <div class="sw"><i style="background:#a8532c"></i><b>Accent on light</b><code>#A8532C</code></div>
+      <div class="sw"><i style="background:#f4f7f6"></i><b>Background</b><code>#F4F7F6</code></div>
+    </div>
+    <div class="mock" style="--m-dark:#0f4a52;--m-deep:#08333a;--m-light:#186470;--m-acc:#f2a985;--m-acc-deep:#a8532c;--m-btn-bg:#f2a985;--m-btn-fg:#08333a;--m-tint:#cfe5e3;--m-bg:#f4f7f6">
+      <div class="m-nav">
+        <div class="m-logo"><span class="m-mark" aria-hidden="true"></span><div>MACTE<small>Michigan Association of Colleges for Teacher Education</small></div></div>
+        <div class="m-links"><span>Home</span><span>Executive Board</span><span>Meeting Dates</span><span>Resources</span><span>Contact</span></div>
+        <div class="m-cta">Membership</div>
+      </div>
+      <div class="m-hero">
+        <div>
+          <div class="m-eyebrow">Michigan's AACTE State Affiliate</div>
+          <h3>Advancing Educator Preparation Across Michigan</h3>
+          <p>MACTE brings together deans, chairs, and directors of teacher education programs to strengthen educator preparation through collaboration, advocacy, and shared professional learning.</p>
+          <div class="m-btns"><span class="m-btn primary">Become a Member</span><span class="m-btn outline">Learn About MACTE</span></div>
+        </div>
+        <div class="m-card">
+          <div class="m-eyebrow">Upcoming</div>
+          <div class="m-event"><b>Fall Business Meeting</b><span>Example date · Lansing</span></div>
+          <div class="m-event"><b>Spring Business Meeting</b><span>Example date · Virtual</span></div>
+        </div>
+      </div>
+      <div class="m-body">
+        <div class="m-eyebrow">What We Do</div>
+        <h4>Supporting Michigan's Educator Preparation Community</h4>
+        <div class="m-cards">
+          <div class="m-feat"><div class="ic"><i></i></div><b>Advocacy</b><p>Representing Michigan's teacher preparation programs with the Michigan Department of Education.</p></div>
+          <div class="m-feat"><div class="ic"><i></i></div><b>Collaboration</b><p>Connecting deans, chairs, and directors to share best practices.</p></div>
+          <div class="m-feat"><div class="ic"><i></i></div><b>Professional Development</b><p>Meetings and workshops that support excellence in educator preparation.</p></div>
+        </div>
+        <span class="m-link">Meet Our Executive Board →</span>
+      </div>
+      <div class="m-foot"><b>MACTE</b><span>MichMACTE@gmail.com · AACTE (national)</span></div>
+    </div>
+    <div class="notes">
+      <div><h5>Feels like</h5><p>Modern and approachable. The most balanced of the four.</p></div>
+      <div><h5>Keep in mind</h5><p>Teal is popular with nonprofits, so it's less unique than plum.</p></div>
+    </div>
+  </section>
+
+  <section class="opt" id="cherry">
+    <div class="opt-head">
+      <div><div class="letter">Option B</div><h2>Charcoal &amp; Cherry</h2></div>
+      <p class="desc">Neutral charcoal with a Michigan cherry red accent. The charcoal does most of the work, and the red marks buttons and highlights.</p>
+    </div>
+    <div class="swatches">
+      <div class="sw"><i style="background:#2c3036"></i><b>Header</b><code>#2C3036</code></div>
+      <div class="sw"><i style="background:#a8213a"></i><b>Accent</b><code>#A8213A</code></div>
+      <div class="sw"><i style="background:#1d2024"></i><b>Footer</b><code>#1D2024</code></div>
+      <div class="sw"><i style="background:#f28497"></i><b>Accent on dark</b><code>#F28497</code></div>
+      <div class="sw"><i style="background:#f7f6f5"></i><b>Background</b><code>#F7F6F5</code></div>
+    </div>
+    <div class="mock" style="--m-dark:#2c3036;--m-deep:#1d2024;--m-light:#3a3f47;--m-acc:#f28497;--m-acc-deep:#a8213a;--m-btn-bg:#a8213a;--m-btn-fg:#ffffff;--m-tint:#dcdfe3;--m-bg:#f7f6f5">
+      <div class="m-nav">
+        <div class="m-logo"><span class="m-mark" aria-hidden="true"></span><div>MACTE<small>Michigan Association of Colleges for Teacher Education</small></div></div>
+        <div class="m-links"><span>Home</span><span>Executive Board</span><span>Meeting Dates</span><span>Resources</span><span>Contact</span></div>
+        <div class="m-cta">Membership</div>
+      </div>
+      <div class="m-hero">
+        <div>
+          <div class="m-eyebrow">Michigan's AACTE State Affiliate</div>
+          <h3>Advancing Educator Preparation Across Michigan</h3>
+          <p>MACTE brings together deans, chairs, and directors of teacher education programs to strengthen educator preparation through collaboration, advocacy, and shared professional learning.</p>
+          <div class="m-btns"><span class="m-btn primary">Become a Member</span><span class="m-btn outline">Learn About MACTE</span></div>
+        </div>
+        <div class="m-card">
+          <div class="m-eyebrow">Upcoming</div>
+          <div class="m-event"><b>Fall Business Meeting</b><span>Example date · Lansing</span></div>
+          <div class="m-event"><b>Spring Business Meeting</b><span>Example date · Virtual</span></div>
+        </div>
+      </div>
+      <div class="m-body">
+        <div class="m-eyebrow">What We Do</div>
+        <h4>Supporting Michigan's Educator Preparation Community</h4>
+        <div class="m-cards">
+          <div class="m-feat"><div class="ic"><i></i></div><b>Advocacy</b><p>Representing Michigan's teacher preparation programs with the Michigan Department of Education.</p></div>
+          <div class="m-feat"><div class="ic"><i></i></div><b>Collaboration</b><p>Connecting deans, chairs, and directors to share best practices.</p></div>
+          <div class="m-feat"><div class="ic"><i></i></div><b>Professional Development</b><p>Meetings and workshops that support excellence in educator preparation.</p></div>
+        </div>
+        <span class="m-link">Meet Our Executive Board →</span>
+      </div>
+      <div class="m-foot"><b>MACTE</b><span>MichMACTE@gmail.com · AACTE (national)</span></div>
+    </div>
+    <div class="notes">
+      <div><h5>Feels like</h5><p>Formal and confident. The most traditional of the four.</p></div>
+      <div><h5>Keep in mind</h5><p>Red is common in Michigan schools. It works here because it never sits next to blue or gold.</p></div>
+    </div>
+  </section>
+
+  <section class="opt" id="plum">
+    <div class="opt-head">
+      <div><div class="letter">Option C</div><h2>Plum &amp; Sage</h2></div>
+      <p class="desc">Deep plum with a soft sage green accent. This is the most distinctive option and the least likely to be mistaken for any member school.</p>
+    </div>
+    <div class="swatches">
+      <div class="sw"><i style="background:#3d2950"></i><b>Header</b><code>#3D2950</code></div>
+      <div class="sw"><i style="background:#b3cfa6"></i><b>Accent</b><code>#B3CFA6</code></div>
+      <div class="sw"><i style="background:#2a1b38"></i><b>Footer</b><code>#2A1B38</code></div>
+      <div class="sw"><i style="background:#4f7a45"></i><b>Accent on light</b><code>#4F7A45</code></div>
+      <div class="sw"><i style="background:#f7f6f8"></i><b>Background</b><code>#F7F6F8</code></div>
+    </div>
+    <div class="mock" style="--m-dark:#3d2950;--m-deep:#2a1b38;--m-light:#4f3866;--m-acc:#b3cfa6;--m-acc-deep:#4f7a45;--m-btn-bg:#b3cfa6;--m-btn-fg:#2a1b38;--m-tint:#ddd3e6;--m-bg:#f7f6f8">
+      <div class="m-nav">
+        <div class="m-logo"><span class="m-mark" aria-hidden="true"></span><div>MACTE<small>Michigan Association of Colleges for Teacher Education</small></div></div>
+        <div class="m-links"><span>Home</span><span>Executive Board</span><span>Meeting Dates</span><span>Resources</span><span>Contact</span></div>
+        <div class="m-cta">Membership</div>
+      </div>
+      <div class="m-hero">
+        <div>
+          <div class="m-eyebrow">Michigan's AACTE State Affiliate</div>
+          <h3>Advancing Educator Preparation Across Michigan</h3>
+          <p>MACTE brings together deans, chairs, and directors of teacher education programs to strengthen educator preparation through collaboration, advocacy, and shared professional learning.</p>
+          <div class="m-btns"><span class="m-btn primary">Become a Member</span><span class="m-btn outline">Learn About MACTE</span></div>
+        </div>
+        <div class="m-card">
+          <div class="m-eyebrow">Upcoming</div>
+          <div class="m-event"><b>Fall Business Meeting</b><span>Example date · Lansing</span></div>
+          <div class="m-event"><b>Spring Business Meeting</b><span>Example date · Virtual</span></div>
+        </div>
+      </div>
+      <div class="m-body">
+        <div class="m-eyebrow">What We Do</div>
+        <h4>Supporting Michigan's Educator Preparation Community</h4>
+        <div class="m-cards">
+          <div class="m-feat"><div class="ic"><i></i></div><b>Advocacy</b><p>Representing Michigan's teacher preparation programs with the Michigan Department of Education.</p></div>
+          <div class="m-feat"><div class="ic"><i></i></div><b>Collaboration</b><p>Connecting deans, chairs, and directors to share best practices.</p></div>
+          <div class="m-feat"><div class="ic"><i></i></div><b>Professional Development</b><p>Meetings and workshops that support excellence in educator preparation.</p></div>
+        </div>
+        <span class="m-link">Meet Our Executive Board →</span>
+      </div>
+      <div class="m-foot"><b>MACTE</b><span>MichMACTE@gmail.com · AACTE (national)</span></div>
+    </div>
+    <div class="notes">
+      <div><h5>Feels like</h5><p>Thoughtful and a little academic. Stands out from most education sites.</p></div>
+      <div><h5>Keep in mind</h5><p>It's the boldest change, so some board members may find it less conservative.</p></div>
+    </div>
+  </section>
+
+  <section class="opt" id="slate">
+    <div class="opt-head">
+      <div><div class="letter">Option D</div><h2>Slate &amp; Sea Glass</h2></div>
+      <p class="desc">Gray slate with a soft sea glass accent, drawn from Petoskey stones and Lake Michigan beach glass. The quietest of the four.</p>
+    </div>
+    <div class="swatches">
+      <div class="sw"><i style="background:#36444f"></i><b>Header</b><code>#36444F</code></div>
+      <div class="sw"><i style="background:#9ed3c6"></i><b>Accent</b><code>#9ED3C6</code></div>
+      <div class="sw"><i style="background:#222c34"></i><b>Footer</b><code>#222C34</code></div>
+      <div class="sw"><i style="background:#2c7366"></i><b>Accent on light</b><code>#2C7366</code></div>
+      <div class="sw"><i style="background:#f5f6f6"></i><b>Background</b><code>#F5F6F6</code></div>
+    </div>
+    <div class="mock" style="--m-dark:#36444f;--m-deep:#222c34;--m-light:#45555f;--m-acc:#9ed3c6;--m-acc-deep:#2c7366;--m-btn-bg:#9ed3c6;--m-btn-fg:#222c34;--m-tint:#d6dee2;--m-bg:#f5f6f6">
+      <div class="m-nav">
+        <div class="m-logo"><span class="m-mark" aria-hidden="true"></span><div>MACTE<small>Michigan Association of Colleges for Teacher Education</small></div></div>
+        <div class="m-links"><span>Home</span><span>Executive Board</span><span>Meeting Dates</span><span>Resources</span><span>Contact</span></div>
+        <div class="m-cta">Membership</div>
+      </div>
+      <div class="m-hero">
+        <div>
+          <div class="m-eyebrow">Michigan's AACTE State Affiliate</div>
+          <h3>Advancing Educator Preparation Across Michigan</h3>
+          <p>MACTE brings together deans, chairs, and directors of teacher education programs to strengthen educator preparation through collaboration, advocacy, and shared professional learning.</p>
+          <div class="m-btns"><span class="m-btn primary">Become a Member</span><span class="m-btn outline">Learn About MACTE</span></div>
+        </div>
+        <div class="m-card">
+          <div class="m-eyebrow">Upcoming</div>
+          <div class="m-event"><b>Fall Business Meeting</b><span>Example date · Lansing</span></div>
+          <div class="m-event"><b>Spring Business Meeting</b><span>Example date · Virtual</span></div>
+        </div>
+      </div>
+      <div class="m-body">
+        <div class="m-eyebrow">What We Do</div>
+        <h4>Supporting Michigan's Educator Preparation Community</h4>
+        <div class="m-cards">
+          <div class="m-feat"><div class="ic"><i></i></div><b>Advocacy</b><p>Representing Michigan's teacher preparation programs with the Michigan Department of Education.</p></div>
+          <div class="m-feat"><div class="ic"><i></i></div><b>Collaboration</b><p>Connecting deans, chairs, and directors to share best practices.</p></div>
+          <div class="m-feat"><div class="ic"><i></i></div><b>Professional Development</b><p>Meetings and workshops that support excellence in educator preparation.</p></div>
+        </div>
+        <span class="m-link">Meet Our Executive Board →</span>
+      </div>
+      <div class="m-foot"><b>MACTE</b><span>MichMACTE@gmail.com · AACTE (national)</span></div>
+    </div>
+    <div class="notes">
+      <div><h5>Feels like</h5><p>Calm, modern, and understated. Lets the content and photos lead.</p></div>
+      <div><h5>Keep in mind</h5><p>The softest option. It may feel too muted for people who want a strong brand color.</p></div>
+    </div>
+  </section>
+
+  <aside class="avoid">
+    <h2>Color pairs we steered away from</h2>
+    <p>MACTE represents schools across the state, so the site shouldn't echo any one member's colors. These are common Michigan university pairs.</p>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Colors</th><th>Pair</th><th>Associated with</th></tr></thead>
+        <tbody>
+          <tr><td><span class="pair"><i style="background:#00274c"></i><i style="background:#ffcb05"></i></span></td><td>Navy and maize</td><td>University of Michigan</td></tr>
+          <tr><td><span class="pair"><i style="background:#18453b"></i><i style="background:#ffffff"></i></span></td><td>Green and white</td><td>Michigan State, Eastern Michigan</td></tr>
+          <tr><td><span class="pair"><i style="background:#0c5449"></i><i style="background:#ffcc33"></i></span></td><td>Green and gold</td><td>Wayne State, Northern Michigan</td></tr>
+          <tr><td><span class="pair"><i style="background:#6a0032"></i><i style="background:#ffc82e"></i></span></td><td>Maroon and gold</td><td>Central Michigan</td></tr>
+          <tr><td><span class="pair"><i style="background:#532e1f"></i><i style="background:#f1c500"></i></span></td><td>Brown and gold</td><td>Western Michigan</td></tr>
+          <tr><td><span class="pair"><i style="background:#000000"></i><i style="background:#b59a57"></i></span></td><td>Black and gold</td><td>Oakland, Michigan Tech</td></tr>
+          <tr><td><span class="pair"><i style="background:#cc0033"></i><i style="background:#003366"></i></span></td><td>Red and blue</td><td>Saginaw Valley State</td></tr>
+          <tr><td><span class="pair"><i style="background:#0032a0"></i><i style="background:#000000"></i></span></td><td>Blue and black</td><td>Grand Valley State</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </aside>
+</div>
+</body>
+</html>
