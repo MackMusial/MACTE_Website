@@ -34,7 +34,6 @@ anywhere without a build step — Netlify, SVSU web hosting, or elsewhere.
 index.html         Home
 executive-board.html Officers, committees, past presidents
 meetings.html       Meeting dates
-bylaws.html         Bylaws downloads
 resources.html      Archived articles, external links, abbreviations glossary
 membership.html     Membership benefits, dues, how to join/renew
 contact.html        Contact info + message form
@@ -47,13 +46,13 @@ js/index-upcoming.js Renders the "Upcoming" preview card on index.html
 js/contact-form.js  Posts the contact.html form to the Apps Script endpoint
 js/board.js         Builds the officer cards (with headshots) on executive-board.html from a Google Sheet
 assets/             Logo (placeholder SVG) and other images
-documents/          PDFs referenced by bylaws.html and resources.html (see documents/README.md)
+documents/          PDFs referenced by resources.html (see documents/README.md)
 apps-script/        Copy of the Google Apps Script deployed as the contact form backend
 templates/          Starter CSV to import when creating the executive board sheet
 ```
 
 Each page repeats the same header/nav and footer markup (no build step = no templating),
-so when editing shared header/footer content, update it across all 7 HTML files.
+so when editing shared header/footer content, update it across all 6 HTML files.
 
 ## Setup walkthrough (doing this with MACTE)
 
@@ -69,7 +68,7 @@ never touch code. Work through the parts in order — Part 1 is a prerequisite f
 | Google Drive | Executive board headshots | Yes — Part 4 |
 | Google Apps Script | The contact form backend that writes into the submissions sheet | Yes — Part 2 |
 | Gmail (`MailApp`) | Emailing a notification whenever the contact form is submitted | No — comes with the script |
-| Google Fonts | The site's two typefaces (Source Serif 4, Inter) on all 7 pages | No — no account, nothing to configure |
+| Google Fonts | The site's two typefaces (Source Serif 4, Inter) on all 6 pages | No — no account, nothing to configure |
 
 There is **no** Google Analytics, Tag Manager, or reCAPTCHA on the site right now. If MACTE
 asks for visitor stats later, that's a separate decision — Netlify has built-in analytics that
@@ -414,7 +413,7 @@ descriptions) is edited directly on GitHub. No software to install.
 
 Netlify republishes the site automatically within a minute or two.
 
-- The navigation menu and footer are copied into all 7 page files. Changing them means making
+- The navigation menu and footer are copied into all 6 page files. Changing them means making
   the same edit in every file.
 - Every change is saved in the file's **History**. If an edit breaks a page, open History, find
   the version before it, and copy that text back in.
@@ -451,7 +450,7 @@ Netlify republishes the site automatically within a minute or two.
    then a light/dark variant of each) rather than just swapping one file, since several pages
    reference the different variants for different backgrounds.
 4. **Contact email**: the site uses `MichMACTE@gmail.com` in `contact.html` and in the footer
-   block on every page. If it ever changes, update it in all 7 HTML files plus `NOTIFY_EMAIL`
+   block on every page. If it ever changes, update it in all 6 HTML files plus `NOTIFY_EMAIL`
    in `apps-script/contact-form.gs` (and redeploy the script). MACTE doesn't publish a mailing
    address, so the contact page lists email and the form only.
 
