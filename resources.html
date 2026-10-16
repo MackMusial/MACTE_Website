@@ -46,34 +46,12 @@
 
     <section class="section">
       <div class="container">
-        <div class="notice">Placeholder content — archived documents below are examples and will be replaced with actual MACTE meeting minutes and articles.</div>
         <div class="section-header">
           <span class="eyebrow">Archive</span>
           <h2>Archived Articles &amp; Meeting Minutes</h2>
         </div>
-        <ul class="doc-list">
-          <li>
-            <div>
-              <div class="doc-name">Fall 2025 Meeting Minutes</div>
-              <div class="doc-meta">October 2025 &middot; PDF</div>
-            </div>
-            <a href="documents/fall-2025-minutes.pdf" class="doc-download btn btn-secondary">Download</a>
-          </li>
-          <li>
-            <div>
-              <div class="doc-name">Spring 2025 Meeting Minutes</div>
-              <div class="doc-meta">April 2025 &middot; PDF</div>
-            </div>
-            <a href="documents/spring-2025-minutes.pdf" class="doc-download btn btn-secondary">Download</a>
-          </li>
-          <li>
-            <div>
-              <div class="doc-name">Educator Preparation Policy Update</div>
-              <div class="doc-meta">Newsletter article &middot; PDF</div>
-            </div>
-            <a href="documents/policy-update-article.pdf" class="doc-download btn btn-secondary">Download</a>
-          </li>
-        </ul>
+        <div id="doc-notice" class="notice">Loading documents&hellip;</div>
+        <ul id="doc-list" class="doc-list"></ul>
       </div>
     </section>
 
@@ -159,5 +137,7 @@
   </footer>
 
   <script src="js/main.js"></script>
+  <script src="js/csv-utils.js"></script>
+  <script src="js/documents.js"></script>
 </body>
 </html>
