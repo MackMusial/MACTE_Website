@@ -21,7 +21,8 @@ anywhere without a build step — Netlify, SVSU web hosting, or elsewhere.
   - [Part 2 — Contact form](#part-2--contact-form-the-one-that-isnt-built-yet)
   - [Part 3 — The meetings sheet](#part-3--the-meetings-sheet-published-csv)
   - [Part 4 — The executive board sheet and headshots](#part-4--the-executive-board-sheet-and-headshots)
-  - [Part 5 — Hosting and domain](#part-5--hosting-and-domain)
+  - [Part 5 — The documents sheet and PDFs](#part-5--the-documents-sheet-and-pdfs)
+  - [Part 6 — Hosting and domain](#part-6--hosting-and-domain)
   - [If something breaks](#if-something-breaks)
 - [Handoff checklist](#handoff-checklist-transferring-the-site-to-macte) — **giving MACTE full ownership**
 - [Day-to-day maintenance](#day-to-day-maintenance-after-setup) — ongoing behavior
@@ -45,10 +46,10 @@ js/meetings.js      Renders the full meeting table on meetings.html
 js/index-upcoming.js Renders the "Upcoming" preview card on index.html
 js/contact-form.js  Posts the contact.html form to the Apps Script endpoint
 js/board.js         Builds the officer cards (with headshots) on executive-board.html from a Google Sheet
+js/documents.js     Builds the archived documents list on resources.html from a Google Sheet
 assets/             Logo (placeholder SVG) and other images
-documents/          PDFs referenced by resources.html (see documents/README.md)
 apps-script/        Copy of the Google Apps Script deployed as the contact form backend
-templates/          Starter CSV to import when creating the executive board sheet
+templates/          Starter CSVs to import when creating the executive board and documents sheets
 ```
 
 Each page repeats the same header/nav and footer markup (no build step = no templating),
@@ -64,8 +65,8 @@ never touch code. Work through the parts in order — Part 1 is a prerequisite f
 
 | Google service | Used for | Needs setup? |
 |---|---|---|
-| Google Sheets | Meeting dates, executive board, contact form submissions | Yes — Parts 2, 3, and 4 |
-| Google Drive | Executive board headshots | Yes — Part 4 |
+| Google Sheets | Meeting dates, executive board, documents list, contact form submissions | Yes — Parts 2–5 |
+| Google Drive | Executive board headshots, PDFs on the Resources page | Yes — Parts 4 and 5 |
 | Google Apps Script | The contact form backend that writes into the submissions sheet | Yes — Part 2 |
 | Gmail (`MailApp`) | Emailing a notification whenever the contact form is submitted | No — comes with the script |
 | Google Fonts | The site's two typefaces (Source Serif 4, Inter) on all 6 pages | No — no account, nothing to configure |
@@ -84,9 +85,10 @@ downloaded into `assets/` and served from the site instead. Not urgent.
 |---|---|---|---|
 | Meeting dates | Site **reads** sheet | `Date, Time, Location, Focus` (order matters) | `js/meetings-data.js` → `MEETINGS_SHEET_CSV_URL` |
 | Executive board | Site **reads** sheet | `Role, Name, Title, Institution, Photo` (any order) | `js/board.js` → `BOARD_SHEET_CSV_URL` |
+| Documents | Site **reads** sheet | `Title, Date, Type, Link` (any order) | `js/documents.js` → `DOCUMENTS_SHEET_CSV_URL` |
 | Contact form | Site **writes** to sheet | `Timestamp, Name, Email, Institution, Message` | `js/contact-form.js` → `CONTACT_ENDPOINT_URL` |
 
-The two the site reads are plain "publish to web" CSV links (Parts 3 and 4). The contact form
+The three the site reads are plain "publish to web" CSV links (Parts 3, 4, and 5). The contact form
 needs an Apps Script because a website can't write into a spreadsheet without one (Part 2).
 
 **Use separate spreadsheets, not tabs in one.** Contact submissions especially should stand
@@ -296,7 +298,66 @@ Google uses widely but doesn't formally document. If Google ever changes it, eve
 back to initials rather than showing broken images. The fix would be a small change in
 `photoSource()` in `js/board.js`.
 
-### Part 5 — Hosting and domain
+### Part 5 — The documents sheet and PDFs
+
+Same setup as the board sheet and headshots: PDFs live in a Drive folder, and a sheet lists
+which ones appear on the Resources page. About 10 minutes. This is what lets officers post
+meeting minutes and articles without touching HTML.
+
+**5a. Create the sheet**
+
+1. Signed in as the MACTE account, create a new Google Sheet named *MACTE Documents*.
+2. **File → Import → Upload** and choose [`templates/documents.csv`](templates/documents.csv)
+   with **Import location: Replace spreadsheet**. That fills in the headers and two example
+   rows. (Or type `Title` · `Date` · `Type` · `Link` into row 1.)
+
+Columns are matched by header name, like the board sheet, so they can be reordered and extra
+columns are ignored (but still published, so nothing private goes in them). `Date` and `Type`
+can be blank. A row with no `Title` or no usable `Link` is skipped.
+
+**5b. Set up the documents folder**
+
+3. In the MACTE account's Google Drive, create a folder named *MACTE Documents*.
+4. **Share → General access → Anyone with the link → Viewer**, and share it with the officers
+   as **Editors**. Files added to the folder inherit public access, the same as headshots.
+
+A PDF in the folder doesn't appear on the site until it has a row in the sheet, so officers can
+keep drafts there. Drafts are still viewable by anyone who has their link, though, so anything
+truly private belongs elsewhere.
+
+**5c. Publish and connect the sheet**
+
+5. Publish the tab as in [3b](#part-3--the-meetings-sheet-published-csv) (the tab, not
+   "Entire document", as **.csv**) and copy the link ending in `output=csv`.
+6. Paste it between the quotes on `DOCUMENTS_SHEET_CSV_URL` in [`js/documents.js`](js/documents.js),
+   then commit and push.
+
+**5d. Give the officers edit access**
+
+7. **Share** the sheet with the officers as **Editors**.
+8. Add a `How to edit` tab with the instructions below. Only the documents tab is published.
+
+**Officer instructions** (paste into the `How to edit` tab):
+
+> **Posting a document:**
+> 1. Upload the PDF into the *MACTE Documents* folder in Google Drive.
+> 2. Right-click it → **Share → Copy link**.
+> 3. Add a row: a `Title` (what visitors see), a `Date` (e.g. `October 2025`), a `Type`
+>    (e.g. `Meeting minutes` or `Newsletter article`), and paste the link into `Link`.
+>
+> Documents appear on the Resources page **in the same order as the rows**, so put the newest at
+> the top: right-click row 2 → **Insert 1 row above**. The site updates within about 5 minutes.
+>
+> **Removing a document:** delete its row. The file can stay in the folder.
+>
+> `Link` can also be a web address for an article hosted somewhere else.
+>
+> **Please don't rename the headers in row 1** (Title, Date, Type, Link).
+
+The Download button sends visitors straight to the file using Drive's download address rather
+than Drive's preview page.
+
+### Part 6 — Hosting and domain
 
 1. Connect the GitHub repo to Netlify (or drag-drop the folder). No build command —
    `netlify.toml` already sets `publish = "."`.
@@ -319,6 +380,9 @@ Netlify should also be under a MACTE-owned login, for the same reason as Part 1.
 | One card shows initials | That photo isn't in the shared folder, or the link in its `Photo` cell is wrong |
 | A field is blank on every card | That column's header in row 1 was renamed or misspelled |
 | A person is missing | Their `Name` cell is empty, or the `Name` header was renamed |
+| Documents say "isn't connected yet" | `DOCUMENTS_SHEET_CSV_URL` is still blank — Part 5c |
+| A document is missing from the list | Its `Title` is empty, or its `Link` is blank or not a web address |
+| Download shows "You need access" | The PDF isn't in the shared *MACTE Documents* folder — Part 5b |
 
 ## Handoff checklist (transferring the site to MACTE)
 
@@ -341,15 +405,15 @@ MACTE's accounts, move everything, test it, and only then remove the developer's
 - [ ] The "Current construction build" link at the top of this README points at the developer's
       GitHub Pages address. Update or remove it once `macte.us` is live.
 
-**3. Move the Google pieces** (the meetings sheet, board sheet, headshots folder, and contact
-submissions sheet)
+**3. Move the Google pieces** (the meetings sheet, board sheet, headshots folder, documents
+sheet, documents folder, and contact submissions sheet)
 
 - [ ] Share each with the MACTE account as **Editor**, then open **Share**, click the dropdown
       next to MACTE's name, and choose **Transfer ownership**. MACTE accepts. If that option isn't
       offered, recreate the item under MACTE's account using its setup Part above.
-- [ ] Meetings and board sheets: signed in as MACTE, open **File → Share → Publish to web** and
-      confirm each is still published. If a published link changed, paste the new one into
-      `js/meetings-data.js` or `js/board.js`.
+- [ ] Meetings, board, and documents sheets: signed in as MACTE, open **File → Share → Publish
+      to web** and confirm each is still published. If a published link changed, paste the new one
+      into `js/meetings-data.js`, `js/board.js`, or `js/documents.js`.
 - [ ] Contact form: the running script still sends as the developer until it's redeployed.
       Signed in as MACTE, open the sheet's **Extensions → Apps Script**, then follow Part 2c to make
       a new deployment. Paste the new `/exec` URL into `js/contact-form.js`. Then open
@@ -357,25 +421,27 @@ submissions sheet)
 - [ ] Set `NOTIFY_EMAIL` to the address MACTE wants, in both the Apps Script editor and
       `apps-script/contact-form.gs`.
 
-**4. Hosting and domain.** Follow [Part 5](#part-5--hosting-and-domain), signed in as MACTE.
+**4. Hosting and domain.** Follow [Part 6](#part-6--hosting-and-domain), signed in as MACTE.
 
 **5. Test on the live site**
 
 - [ ] Contact form: a row appears in the submissions sheet and the email arrives at MACTE's address.
 - [ ] Meetings: edit a row, and it shows on the site within about 5 minutes.
 - [ ] Board: add a headshot link, and the photo shows on the site.
+- [ ] Documents: add a row, and its Download button fetches the PDF in a private browser window.
 
 **6. Walk one officer through it**
 
 - [ ] Editing the meetings sheet.
 - [ ] Editing the board sheet and adding a headshot (the `How to edit` tab).
+- [ ] Posting a PDF to the documents sheet (its `How to edit` tab).
 - [ ] Where contact form messages arrive, and where the full record is kept (the submissions sheet).
 - [ ] [Changing page text](#changing-page-text) on GitHub.
 
 **7. Remove the developer.** Only after step 5 passes.
 
 - [ ] Remove the developer from the GitHub repo's collaborators and from the Netlify team.
-- [ ] Remove the developer from the share list of every sheet and the headshots folder.
+- [ ] Remove the developer from the share list of every sheet and both Drive folders.
 - [ ] Make sure the developer's personal email isn't a recovery address on any MACTE account.
 
 ## Day-to-day maintenance (after setup)
@@ -399,9 +465,14 @@ Officers edit the executive board sheet and drop photos in the *MACTE Headshots*
 instructions on the sheet's `How to edit` tab. No code changes, no redeploy. The Committees
 and Past Presidents sections of `executive-board.html` are still plain HTML.
 
+### Documents
+
+Officers upload PDFs to the *MACTE Documents* folder and add a row to the documents sheet,
+following its `How to edit` tab. No code changes, no redeploy.
+
 ### Changing page text
 
-Anything that isn't meetings or the board (wording on a page, dues amounts, committee
+Anything that isn't meetings, the board, or documents (wording on a page, dues amounts, committee
 descriptions) is edited directly on GitHub. No software to install.
 
 1. Sign in to GitHub as MACTE and open this repository.
@@ -437,8 +508,8 @@ Netlify republishes the site automatically within a minute or two.
 1. **Text/data**: search each page for example names, dates, and dollar amounts and replace
    with real MACTE information (officers, dues, past presidents). Meeting dates are handled via
    the Google Sheet described above, not by editing HTML directly.
-2. **Documents**: drop real PDFs into `documents/` using the filenames already linked
-   (see `documents/README.md`), or update the `href` values if using different filenames.
+2. **Documents**: handled by the documents sheet (Part 5), not by editing HTML. Delete the
+   two example rows once real documents are added.
 3. **Logo**: the real MACTE logo (Michigan state silhouette + wordmark) is already in place in
    `assets/`. Files available:
    - `macte-icon-white.png` / `macte-logo-full-white.png` — white reversed versions for dark
@@ -456,7 +527,7 @@ Netlify republishes the site automatically within a minute or two.
 
 ## Hosting
 
-Setup steps are in [Part 5](#part-5--hosting-and-domain) above. In short: Netlify is the
+Setup steps are in [Part 6](#part-6--hosting-and-domain) above. In short: Netlify is the
 planned host, connected to the GitHub repo with no build command (`netlify.toml` sets
 `publish = "."`), with `macte.us` pointed at it from GoDaddy.
 
