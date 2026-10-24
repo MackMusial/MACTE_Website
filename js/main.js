@@ -17,6 +17,14 @@ document.addEventListener("DOMContentLoaded", () => {
         toggle.setAttribute("aria-expanded", "false");
       });
     });
+
+    // Escape closes the mobile menu and returns focus to the toggle
+    document.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape" || !links.classList.contains("open")) return;
+      links.classList.remove("open");
+      toggle.setAttribute("aria-expanded", "false");
+      toggle.focus();
+    });
   }
 
   // Set current year in footer

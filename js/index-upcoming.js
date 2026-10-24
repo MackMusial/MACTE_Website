@@ -1,5 +1,5 @@
 // Renders the "Upcoming" preview card on index.html from the shared
-// sheet data source (js/meetings-data.js). Shows the first three rows
+// sheet data source (js/meetings-data.js). Shows the first three upcoming rows
 // from the sheet; if the fetch fails, the placeholder list already in
 // the page is left in place.
 document.addEventListener("DOMContentLoaded", () => {
@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!list) return;
 //Calls the exact same fetchMeetings() function from meetings-data.js that is used in meetings.js to get the data from the Google Sheet.
   window.MacteMeetings.fetchMeetings()
-  //ensure their is data to display, if not, it will leave the placeholder list in place.
+  //ensure there is data to display, if not, it will leave the placeholder list in place.
     .then((rows) => {
       if (rows.length === 0) return;
       //once we know the data is real. 
@@ -18,7 +18,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const strong = document.createElement("strong");
         strong.textContent = (focus || "").trim();
         li.appendChild(strong);
-        li.appendChild(document.createTextNode(" — " + (date || "").trim() + ", " + (location || "").trim()));
+        const details = [date, location].map((value) => (value || "").trim()).filter(Boolean).join(", ");
+        if (details) li.appendChild(document.createTextNode(" — " + details));
         list.appendChild(li);
       });
     })

@@ -60,7 +60,7 @@ h1.page { font-family: var(--serif); font-size: clamp(30px, 5vw, 42px); line-hei
 }
 .jump a:hover { outline: 1px solid var(--line); }
 .jump a:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
-.dot { width: 16px; height: 16px; border-radius: 50%; display: inline-block; flex: none; }
+.dot { width: 16px; height: 16px; border-radius: 50%; display: inline-block; flex: none; box-shadow: inset 0 0 0 1px rgba(0,0,0,.18); }
 
 section.opt { display: grid; gap: 18px; scroll-margin-top: 24px; }
 .opt-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 24px; align-items: end; }
@@ -105,7 +105,7 @@ section.opt { display: grid; gap: 18px; scroll-margin-top: 24px; }
 .m-card { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.18); border-radius: 8px; padding: 16px 18px; min-width: 0; }
 .m-card .m-eyebrow { margin-bottom: 10px; }
 .m-event { display: grid; gap: 2px; padding-block: 8px; border-top: 1px solid rgba(255,255,255,.14); }
-.m-event:first-of-type { border-top: 0; padding-top: 0; }
+.m-eyebrow + .m-event { border-top: 0; padding-top: 0; }
 .m-event b { color: #fff; font-size: 13px; }
 .m-event span { color: var(--m-tint); font-size: 12px; }
 
@@ -133,6 +133,8 @@ section.opt { display: grid; gap: 18px; scroll-margin-top: 24px; }
 .mock.light .m-btn.outline { border-color: var(--m-dark); color: var(--m-dark); }
 .mock.light .m-card { background: #ffffff; border-color: #d3e3e9; }
 .mock.light .m-event { border-top-color: #e2ebee; }
+.mock.light .m-feat .ic { background: var(--m-acc); }
+.mock.light .m-feat .ic i { background: #ffffff; }
 .mock.light .m-foot { color: #cfe0e6; }
 
 .group { display: grid; gap: 8px; max-width: 70ch; padding-top: 8px; border-top: 1px solid var(--line); }
@@ -178,7 +180,7 @@ html { scroll-behavior: smooth; }
     <a class="back" href="index.html">← Back to the MACTE site</a>
     <div class="kicker">MACTE website · Color review</div>
     <h1 class="page">Thirteen new color schemes for the MACTE site</h1>
-    <p>The current navy and gold read as University of Michigan maize and blue. Each option below shows the real home page in a new palette. Only the colors change. The layout, fonts, and white logo stay the same.</p>
+    <p>The current navy and gold read as University of Michigan maize and blue. Each option below shows the real home page in a new palette. Only the colors change. The layout and fonts stay the same, and every option except M keeps the white logo.</p>
     <p>Every option avoids the color pairs that Michigan member universities use, so the site doesn't look like it belongs to any one school.</p>
     <nav class="jump" aria-label="Jump to an option">
       <a href="#current"><span class="dot" style="background:linear-gradient(90deg,#12294d 50%,#c9a227 50%)"></span>Current</a>
@@ -751,10 +753,10 @@ html { scroll-behavior: smooth; }
       <div class="sw"><i style="background:#6e2a14"></i><b>Header</b><code>#6E2A14</code></div>
       <div class="sw"><i style="background:#c9dc85"></i><b>Accent</b><code>#C9DC85</code></div>
       <div class="sw"><i style="background:#3e170a"></i><b>Footer</b><code>#3E170A</code></div>
-      <div class="sw"><i style="background:#5d7a1f"></i><b>Accent on light</b><code>#5D7A1F</code></div>
+      <div class="sw"><i style="background:#587419"></i><b>Accent on light</b><code>#587419</code></div>
       <div class="sw"><i style="background:#f7f5ef"></i><b>Background</b><code>#F7F5EF</code></div>
     </div>
-    <div class="mock" style="--m-dark:#6e2a14;--m-deep:#3e170a;--m-light:#86361b;--m-acc:#c9dc85;--m-acc-deep:#5d7a1f;--m-btn-bg:#c9dc85;--m-btn-fg:#3e170a;--m-tint:#efd9cf;--m-bg:#f7f5ef">
+    <div class="mock" style="--m-dark:#6e2a14;--m-deep:#3e170a;--m-light:#86361b;--m-acc:#c9dc85;--m-acc-deep:#587419;--m-btn-bg:#c9dc85;--m-btn-fg:#3e170a;--m-tint:#efd9cf;--m-bg:#f7f5ef">
       <div class="m-nav">
         <div class="m-logo"><span class="m-mark" aria-hidden="true"></span><div>MACTE<small>Michigan Association of Colleges for Teacher Education</small></div></div>
         <div class="m-links"><span>Home</span><span>Executive Board</span><span>Meeting Dates</span><span>Resources</span><span>Contact</span></div>

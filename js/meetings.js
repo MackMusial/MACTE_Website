@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const tbody = document.getElementById("meetings-table-body");
   const notice = document.getElementById("meetings-notice");
   if (!tbody) return;
-//get meeting informating from meetins-data.js,
+//get meeting information from meetings-data.js,
 //which is the same data source used in index-upcoming.js to get the data from the Google Sheet.
   window.MacteMeetings.fetchMeetings()
     .then((rows) => {

@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to main content</a>
 
   <header class="site-header">
     <nav class="nav-bar">
@@ -23,8 +24,8 @@
           <span class="acronym">MACTE</span>
         </span>
       </a>
-      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">&#9776;</button>
-      <ul class="nav-links">
+      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="site-nav">&#9776;</button>
+      <ul class="nav-links" id="site-nav">
         <li><a href="index.html">Home</a></li>
         <li><a href="executive-board.html">Executive Board</a></li>
         <li><a href="meetings.html">Meeting Dates</a></li>
@@ -35,7 +36,7 @@
     </nav>
   </header>
 
-  <main>
+  <main id="main">
     <section class="page-hero">
       <div class="container">
         <span class="eyebrow">Membership</span>
@@ -135,6 +136,13 @@
             <li><a href="mailto:MichMACTE@gmail.com">MichMACTE@gmail.com</a></li>
             <li><a href="contact.html">Contact form</a></li>
             <li><a href="https://www.aacte.org" target="_blank" rel="noopener">AACTE (national)</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Follow Us</h4>
+          <ul>
+            <li><a href="https://www.linkedin.com/company/michigan-association-of-colleges-for-teacher-education/" target="_blank" rel="noopener">LinkedIn</a></li>
+            <li><a href="https://www.facebook.com/Mich.ACTE" target="_blank" rel="noopener">Facebook</a></li>
           </ul>
         </div>
       </div>

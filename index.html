@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to main content</a>
 
   <header class="site-header">
     <nav class="nav-bar">
@@ -23,8 +24,8 @@
           <span class="acronym">MACTE</span>
         </span>
       </a>
-      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">&#9776;</button>
-      <ul class="nav-links">
+      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="site-nav">&#9776;</button>
+      <ul class="nav-links" id="site-nav">
         <li><a href="index.html" aria-current="page">Home</a></li>
         <li><a href="executive-board.html">Executive Board</a></li>
         <li><a href="meetings.html">Meeting Dates</a></li>
@@ -35,7 +36,7 @@
     </nav>
   </header>
 
-  <main>
+  <main id="main">
     <section class="hero">
       <div class="container">
         <div>
@@ -52,11 +53,11 @@
           </div>
         </div>
         <div class="hero-card">
-          <h3>Upcoming</h3>
+          <h2>Upcoming</h2>
           <ul id="upcoming-list">
             <li><strong>No events to show</strong> </li>
           </ul>
-          <p style="margin-top: 1rem;"><a href="meetings.html" class="btn-outline btn" style="padding:0.5rem 1rem; font-size:0.85rem;">View full calendar</a></p>
+          <p class="hero-card-footer"><a href="meetings.html" class="btn btn-outline btn-sm">View full calendar</a></p>
         </div>
       </div>
     </section>

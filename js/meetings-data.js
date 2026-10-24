@@ -14,7 +14,18 @@ function fetchMeetings() {
       if (!response.ok) throw new Error("Sheet request failed");
       return response.text();
     })
-    .then((text) => parseCSV(text).slice(1)); // drop header row
+    .then((text) => parseCSV(text).slice(1)) // drop header row
+    .then((rows) => rows.filter(isNotPast));
+}
+
+// Both pages list upcoming meetings, so rows dated before today are dropped
+// automatically. A date the browser can't read (e.g. "TBD") is kept.
+function isNotPast([date]) {
+  const parsed = new Date((date || "").trim());
+  if (isNaN(parsed)) return true;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return parsed >= today;
 }
 
 window.MacteMeetings = { fetchMeetings };

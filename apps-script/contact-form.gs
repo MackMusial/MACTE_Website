@@ -37,7 +37,7 @@ function doPost(e) {
     }
 
     const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAME);
-    sheet.appendRow([new Date(), name, email, institution, message]);
+    sheet.appendRow([new Date(), asText(name), asText(email), asText(institution), asText(message)]);
 
     // The row is the record of note, so a failed notification must not turn a
     // saved submission into an error the visitor sees and retries.
@@ -67,6 +67,13 @@ function notify(name, email, institution, message) {
       message,
     ].join("\n"),
   });
+}
+
+// Sheets runs any cell starting with = + - or @ as a formula, so a visitor
+// could otherwise plant one (e.g. =IMPORTXML) in the submissions sheet. A
+// leading apostrophe stores it as plain text.
+function asText(value) {
+  return /^[=+\-@]/.test(value) ? "'" + value : value;
 }
 
 function jsonResponse(payload) {

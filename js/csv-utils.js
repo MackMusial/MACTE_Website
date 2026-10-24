@@ -8,12 +8,12 @@ function parseCSV(text) {
 
   for (let i = 0; i < text.length; i++) {
     const char = text[i];
-    //if it sees a ", it checks the next character too. Two q uotes in a row ("") is CSV's escape for a litter quote inside a quoted field.
+    //if it sees a ", it checks the next character too. Two quotes in a row ("") is CSV's escape for a literal quote inside a quoted field.
     //So it adds one " to the field and skips ahead. A single " ends the quoted field. 
     // If it sees a comma, it adds the field to the row and starts a new field. 
     // If it sees a newline, it adds the field to the row, adds the row to the rows array, 
     // and starts a new row and field. 
-    // Otherwise, its an ordenary character and it adds the character to the current field.
+    // Otherwise, it's an ordinary character and it adds the character to the current field.
     if (inQuotes) {
       if (char === '"') {
         if (text[i + 1] === '"') {
