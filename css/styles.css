@@ -423,6 +423,23 @@ textarea { resize: vertical; min-height: 140px; }
   color: #8a2b21;
 }
 
+/* ---------- Policy pages ---------- */
+.prose > * { max-width: 70ch; }
+.prose h2 { font-size: 1.4rem; margin-top: 2.25rem; }
+.prose ul { padding-left: 1.25rem; margin: 0 0 1rem; }
+.prose li { margin-bottom: 0.5rem; }
+.prose a { text-decoration: underline; text-underline-offset: 2px; }
+/* Marks wording the board still has to decide on the draft policy pages. */
+.tbd {
+  background: #fff7e6;
+  color: #6b5715;
+  border-radius: 3px;
+  padding: 0 0.25rem;
+  font-style: italic;
+}
+
+.form-note { margin: 0; font-size: 0.85rem; color: var(--color-text-muted); }
+
 /* ---------- Footer ---------- */
 .site-footer {
   background: var(--color-navy-dark);
@@ -440,6 +457,8 @@ textarea { resize: vertical; min-height: 140px; }
 .footer-grid ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; }
 .footer-grid a { color: var(--color-on-navy-faint); }
 .footer-grid a:hover { color: var(--color-surface); }
+.footer-legal a { color: inherit; }
+.footer-legal a:hover { color: var(--color-surface); }
 .footer-bottom {
   border-top: 1px solid rgba(255,255,255,0.1);
   padding-top: 1.25rem;
