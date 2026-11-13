@@ -11,6 +11,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/styles.css" />
+  <!-- Cross-fade between pages. Kept inline so the browser sees it before the stylesheet arrives. -->
+  <style>@media (prefers-reduced-motion: no-preference) { @view-transition { navigation: auto; } }</style>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to main content</a>
@@ -80,7 +82,7 @@
               <label for="message">Message</label>
               <textarea id="message" name="message" required></textarea>
             </div>
-            <button type="submit" class="btn btn-primary">Send Message</button>
+            <button type="submit" class="btn btn-secondary">Send Message</button>
             <p class="form-note">We use your name and email only to reply to you. See our <a href="privacy.html">privacy notice</a>.</p>
             <p id="contact-status" class="form-status" role="status" aria-live="polite" hidden></p>
           </form>

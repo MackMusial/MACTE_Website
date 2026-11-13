@@ -21,7 +21,12 @@ function fetchMeetings() {
 // Both pages list upcoming meetings, so rows dated before today are dropped
 // automatically. A date the browser can't read (e.g. "TBD") is kept.
 function isNotPast([date]) {
-  const parsed = new Date((date || "").trim());
+  const text = (date || "").trim();
+  // A bare "2026-11-13" is read by browsers as midnight UTC, which is the
+  // evening before in Michigan and would hide a meeting on the day it happens.
+  // Build that form as a local date instead.
+  const iso = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(text);
+  const parsed = iso ? new Date(Number(iso[1]), Number(iso[2]) - 1, Number(iso[3])) : new Date(text);
   if (isNaN(parsed)) return true;
   const today = new Date();
   today.setHours(0, 0, 0, 0);

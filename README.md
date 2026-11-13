@@ -39,7 +39,7 @@ resources.html      Archived articles, external links, abbreviations glossary
 membership.html     Membership benefits, dues, how to join/renew
 contact.html        Contact info + message form
 css/styles.css      All site styling (single stylesheet, CSS variables for theme colors)
-js/main.js          Mobile nav toggle + footer year
+js/main.js          Mobile nav toggle, footer year, scroll-in animations, PayPal button on/off switch
 js/csv-utils.js     Shared CSV parser for pages that pull data from a published Google Sheet
 js/meetings-data.js Fetches/parses the meetings Google Sheet, shared by index.html and meetings.html
 js/meetings.js      Renders the full meeting table on meetings.html
@@ -53,7 +53,7 @@ templates/          Starter CSVs to import when creating the executive board and
 ```
 
 Each page repeats the same header/nav and footer markup (no build step = no templating),
-so when editing shared header/footer content, update it across all 6 HTML files.
+so when editing shared header/footer content, update it on every HTML page.
 
 ## Setup walkthrough (doing this with MACTE)
 
@@ -521,9 +521,13 @@ Netlify republishes the site automatically within a minute or two.
    then a light/dark variant of each) rather than just swapping one file, since several pages
    reference the different variants for different backgrounds.
 4. **Contact email**: the site uses `MichMACTE@gmail.com` in `contact.html` and in the footer
-   block on every page. If it ever changes, update it in all 6 HTML files plus `NOTIFY_EMAIL`
+   block on every page. If it ever changes, update it in every HTML page plus `NOTIFY_EMAIL`
    in `apps-script/contact-form.gs` (and redeploy the script). MACTE doesn't publish a mailing
    address, so the contact page lists email and the form only.
+5. **PayPal link**: the "Pay with PayPal" button on `membership.html` is switched off until it
+   has a link. Search that file for `PAYPAL LINK` and paste the payment link from PayPal between
+   the quotes of `href=""` on the line below the comment. Nothing else needs to change: with a
+   link in place the button turns on and the "coming soon" line disappears.
 
 ## Hosting
 

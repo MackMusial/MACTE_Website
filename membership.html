@@ -11,6 +11,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/styles.css" />
+  <!-- Cross-fade between pages. Kept inline so the browser sees it before the stylesheet arrives. -->
+  <style>@media (prefers-reduced-motion: no-preference) { @view-transition { navigation: auto; } }</style>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to main content</a>
@@ -74,7 +76,7 @@
 
     <section class="section section-alt">
       <div class="container">
-        <div class="notice">Placeholder content — dues amounts below are examples and will be updated with MACTE's current fee schedule.</div>
+        <div class="notice">Placeholder content — dues amounts will be posted once MACTE's current fee schedule is confirmed.</div>
         <div class="section-header">
           <span class="eyebrow">Dues</span>
           <h2>Annual Membership Dues</h2>
@@ -85,11 +87,26 @@
               <tr><th>Institution Type</th><th>Annual Dues</th></tr>
             </thead>
             <tbody>
-              <tr><td>Public University</td><td>$150</td></tr>
-              <tr><td>Private College or University</td><td>$150</td></tr>
-              <tr><td>Community College (Educator Prep Pathway)</td><td>$75</td></tr>
+              <tr><td>Public University</td><td>To be announced</td></tr>
+              <tr><td>Private College or University</td><td>To be announced</td></tr>
+              <tr><td>Community College (Educator Prep Pathway)</td><td>To be announced</td></tr>
             </tbody>
           </table>
+        </div>
+
+        <div class="callout">
+          <div>
+            <h2>Pay Your Dues Online</h2>
+            <p>Payments are processed by PayPal. See the <a href="payment-terms.html">payment terms</a>.</p>
+            <p data-paypal-pending hidden>Online payment is coming soon. Until then, <a href="contact.html">contact MACTE</a> to arrange payment.</p>
+          </div>
+          <!--
+            PAYPAL LINK: paste the payment link from PayPal between the quotes
+            of href="" on the line below, e.g. href="https://www.paypal.com/...".
+            That is the only change needed. While href is empty, the button is
+            switched off and the "coming soon" line above is shown automatically.
+          -->
+          <a class="btn btn-primary" data-paypal-link href="" target="_blank" rel="noopener">Pay with PayPal</a>
         </div>
       </div>
     </section>
@@ -109,7 +126,7 @@
         <div class="card">
           <h3>Questions about membership?</h3>
           <p>Reach out and a MACTE officer will follow up with details on joining or renewing.</p>
-          <a href="contact.html" class="btn btn-primary">Contact MACTE</a>
+          <a href="contact.html" class="btn btn-secondary">Contact MACTE</a>
         </div>
       </div>
     </section>

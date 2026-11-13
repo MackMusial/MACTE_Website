@@ -4,24 +4,30 @@
    ========================================================================== */
 
 :root {
-  --color-navy: #12294d;
-  --color-navy-dark: #0b1c36;
-  --color-navy-light: #1e3a63;
-  --color-gold: #c9a227;
-  --color-gold-light: #e8cf7a;
-  /* Gold dark enough for small text on white and --color-bg (5.2:1); plain gold is only for navy. */
-  --color-gold-text: #806510;
-  --color-on-navy: #d7dfee;
-  --color-on-navy-faint: #b9c3d6;
-  --color-bg: #f7f7f5;
+  /* Palette: "Lake Superior & Birch" (Option E on color-options.html). */
+  --color-primary: #1d4f6e;
+  --color-primary-dark: #133a52;
+  --color-primary-light: #27627f;
+  /* Birch is only for the dark lake surfaces; it is too pale to read on white. */
+  --color-accent: #eadfc8;
+  --color-accent-light: #f4ede0;
+  /* Accent for small text on white and --color-bg (5.5:1 or better). */
+  --color-accent-text: #1d6a8f;
+  --color-on-primary: #d3e1ea;
+  --color-on-primary-faint: #b5c9d6;
+  --color-bg: #f5f7f8;
   --color-surface: #ffffff;
   --color-text: #1f2430;
   --color-text-muted: #5b6270;
   --color-border: #e2e4e8;
   --radius: 6px;
-  --shadow-sm: 0 1px 3px rgba(18, 41, 77, 0.08);
-  --shadow-md: 0 4px 16px rgba(18, 41, 77, 0.12);
+  --shadow-sm: 0 1px 3px rgba(19, 58, 82, 0.08);
+  --shadow-md: 0 4px 16px rgba(19, 58, 82, 0.12);
   --max-width: 1120px;
+  /* Motion: quick for hover feedback, slower for things arriving on the page. */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 150ms;
+  --dur: 250ms;
   --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-serif: "Source Serif 4", Georgia, "Times New Roman", serif;
 }
@@ -46,31 +52,39 @@ img { max-width: 100%; display: block; }
 /* Keep in-page jump targets clear of the sticky header. */
 [id] { scroll-margin-top: 5rem; }
 
-a { color: var(--color-navy); text-decoration: none; }
+::selection { background: var(--color-primary); color: var(--color-surface); }
+.site-header ::selection,
+.hero ::selection,
+.page-hero ::selection,
+.callout ::selection,
+.site-footer ::selection { background: var(--color-accent); color: var(--color-primary-dark); }
+
+a { color: var(--color-primary); text-decoration: none; transition: color var(--dur-fast) ease; }
 a:hover { text-decoration: underline; }
 
-/* Navy rings on light surfaces, gold on the navy ones. */
+/* Primary-color rings on light surfaces, birch on the dark ones. */
 a:focus-visible,
 button:focus-visible {
-  outline: 2px solid var(--color-navy);
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 .site-header :focus-visible,
 .hero :focus-visible,
 .page-hero :focus-visible,
 .callout :focus-visible,
-.site-footer :focus-visible { outline-color: var(--color-gold); }
+.site-footer :focus-visible { outline-color: var(--color-accent); }
 
 .skip-link {
   position: absolute;
   left: 1rem;
   top: -3rem;
   z-index: 200;
-  background: var(--color-gold);
-  color: var(--color-navy-dark);
+  background: var(--color-accent);
+  color: var(--color-primary-dark);
   font-weight: 600;
   padding: 0.6rem 1rem;
   border-radius: var(--radius);
+  transition: top var(--dur-fast) ease;
 }
 .skip-link:focus { top: 0.75rem; }
 
@@ -82,9 +96,10 @@ button:focus-visible {
 
 h1, h2, h3, h4 {
   font-family: var(--font-serif);
-  color: var(--color-navy);
+  color: var(--color-primary);
   line-height: 1.25;
   margin: 0 0 0.75rem;
+  text-wrap: balance;
 }
 
 h1 { font-size: 2.4rem; }
@@ -99,11 +114,11 @@ p { margin: 0 0 1rem; }
   letter-spacing: 0.08em;
   font-size: 0.78rem;
   font-weight: 600;
-  color: var(--color-gold-text);
+  color: var(--color-accent-text);
   margin-bottom: 0.5rem;
 }
 .hero .eyebrow,
-.page-hero .eyebrow { color: var(--color-gold); }
+.page-hero .eyebrow { color: var(--color-accent); }
 
 /* ---------- Buttons ---------- */
 .btn {
@@ -114,15 +129,18 @@ p { margin: 0 0 1rem; }
   font-size: 0.95rem;
   border: 2px solid transparent;
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  transition: background var(--dur-fast) ease, color var(--dur-fast) ease, border-color var(--dur-fast) ease,
+    box-shadow var(--dur) var(--ease-out), transform var(--dur) var(--ease-out);
 }
-.btn:hover { text-decoration: none; }
+.btn:hover { text-decoration: none; box-shadow: var(--shadow-md); }
+.btn:active { box-shadow: none; }
+.btn:disabled { opacity: 0.6; cursor: not-allowed; box-shadow: none; }
 
 .btn-primary {
-  background: var(--color-gold);
-  color: var(--color-navy-dark);
+  background: var(--color-accent);
+  color: var(--color-primary-dark);
 }
-.btn-primary:hover { background: var(--color-gold-light); }
+.btn-primary:hover { background: var(--color-accent-light); }
 
 .btn-outline {
   background: transparent;
@@ -132,16 +150,16 @@ p { margin: 0 0 1rem; }
 .btn-outline:hover { background: rgba(255,255,255,0.12); }
 
 .btn-secondary {
-  background: var(--color-navy);
+  background: var(--color-primary);
   color: var(--color-surface);
 }
-.btn-secondary:hover { background: var(--color-navy-light); }
+.btn-secondary:hover { background: var(--color-primary-light); }
 
 .btn-sm { padding: 0.5rem 1rem; font-size: 0.85rem; }
 
 /* ---------- Header / Nav ---------- */
 .site-header {
-  background: var(--color-navy);
+  background: var(--color-primary);
   color: var(--color-surface);
   position: sticky;
   top: 0;
@@ -172,7 +190,7 @@ p { margin: 0 0 1rem; }
 .brand-text .full-name {
   display: block;
   font-size: 0.7rem;
-  color: #c7d2e6;
+  color: #c9d9e3;
   font-weight: 400;
 }
 .brand-text .acronym {
@@ -201,32 +219,33 @@ p { margin: 0 0 1rem; }
 }
 
 .nav-links a {
-  color: #e6eaf2;
+  color: #e4edf2;
   font-weight: 500;
   font-size: 0.95rem;
   padding: 0.4rem 0.1rem;
   white-space: nowrap;
   border-bottom: 2px solid transparent;
+  transition: color var(--dur-fast) ease, border-color var(--dur) ease, background var(--dur-fast) ease;
 }
 .nav-links a:hover,
 .nav-links a[aria-current="page"] {
   color: var(--color-surface);
-  border-bottom-color: var(--color-gold);
+  border-bottom-color: var(--color-accent);
   text-decoration: none;
 }
 
 .nav-cta {
-  background: var(--color-gold);
-  color: var(--color-navy-dark) !important;
+  background: var(--color-accent);
+  color: var(--color-primary-dark) !important;
   padding: 0.5rem 1rem;
   border-radius: var(--radius);
   border-bottom: none !important;
 }
-.nav-cta:hover { background: var(--color-gold-light); }
+.nav-cta:hover { background: var(--color-accent-light); }
 
 /* ---------- Hero ---------- */
 .hero {
-  background: linear-gradient(135deg, var(--color-navy-dark), var(--color-navy) 60%, var(--color-navy-light));
+  background: linear-gradient(135deg, var(--color-primary-dark), var(--color-primary) 60%, var(--color-primary-light));
   color: var(--color-surface);
   padding: 4.5rem 0;
 }
@@ -241,7 +260,7 @@ p { margin: 0 0 1rem; }
 .hero h1 { color: var(--color-surface); }
 .hero p.lead {
   font-size: 1.1rem;
-  color: var(--color-on-navy);
+  color: var(--color-on-primary);
   max-width: 46ch;
 }
 
@@ -254,17 +273,17 @@ p { margin: 0 0 1rem; }
   padding: 1.5rem;
 }
 .hero-card h2 { color: var(--color-surface); font-size: 1.3rem; }
-.hero-card ul { margin: 0; padding-left: 1.1rem; color: var(--color-on-navy); }
+.hero-card ul { margin: 0; padding-left: 1.1rem; color: var(--color-on-primary); }
 .hero-card li { margin-bottom: 0.5rem; }
 .hero-card-footer { margin: 1rem 0 0; }
 
 .page-hero {
-  background: linear-gradient(135deg, var(--color-navy-dark), var(--color-navy));
+  background: linear-gradient(135deg, var(--color-primary-dark), var(--color-primary));
   color: var(--color-surface);
   padding: 3rem 0 2.5rem;
 }
 .page-hero h1 { color: var(--color-surface); margin-bottom: 0.5rem; }
-.page-hero p { color: var(--color-on-navy); max-width: 65ch; margin-bottom: 0; }
+.page-hero p { color: var(--color-on-primary); max-width: 65ch; margin-bottom: 0; }
 
 /* ---------- Sections ---------- */
 .section { padding: 3.5rem 0; }
@@ -283,7 +302,10 @@ p { margin: 0 0 1rem; }
   border-radius: var(--radius);
   padding: 1.5rem;
   box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--dur) var(--ease-out), transform var(--dur) var(--ease-out);
 }
+/* Only cards that lead somewhere respond to the pointer. */
+.card:has(a):hover { box-shadow: var(--shadow-md); }
 .card h3 { margin-bottom: 0.5rem; }
 .card p:last-child { margin-bottom: 0; }
 
@@ -305,8 +327,8 @@ p { margin: 0 0 1rem; }
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--color-navy);
-  color: var(--color-gold-light);
+  background: var(--color-primary);
+  color: var(--color-accent-light);
   font-family: var(--font-serif);
   font-size: 1.75rem;
   font-weight: 700;
@@ -329,7 +351,7 @@ th, td {
   font-size: 0.95rem;
 }
 th {
-  background: var(--color-navy);
+  background: var(--color-primary);
   color: var(--color-surface);
   font-weight: 600;
   font-size: 0.85rem;
@@ -337,7 +359,9 @@ th {
   letter-spacing: 0.04em;
 }
 tr:last-child td { border-bottom: none; }
+td { transition: background var(--dur-fast) ease; }
 tr:nth-child(even) td { background: #fafbfc; }
+tbody tr:hover td { background: #eef3f6; }
 
 /* ---------- Document list ---------- */
 .doc-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.75rem; }
@@ -350,7 +374,9 @@ tr:nth-child(even) td { background: #fafbfc; }
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   padding: 0.9rem 1.15rem;
+  transition: box-shadow var(--dur) var(--ease-out), border-color var(--dur) ease;
 }
+.doc-list li:hover { box-shadow: var(--shadow-sm); border-color: #c9d3da; }
 .doc-list .doc-name { font-weight: 600; }
 .doc-list .doc-meta { color: var(--color-text-muted); font-size: 0.85rem; }
 .doc-download {
@@ -361,7 +387,7 @@ tr:nth-child(even) td { background: #fafbfc; }
 
 /* ---------- Callout / CTA band ---------- */
 .callout {
-  background: var(--color-navy);
+  background: var(--color-primary);
   color: var(--color-surface);
   border-radius: var(--radius);
   padding: 2.5rem;
@@ -372,16 +398,27 @@ tr:nth-child(even) td { background: #fafbfc; }
   flex-wrap: wrap;
 }
 .callout h2 { color: var(--color-surface); margin-bottom: 0.25rem; }
-.callout p { color: var(--color-on-navy); margin-bottom: 0; }
+.callout p { color: var(--color-on-primary); margin-bottom: 0; }
+.callout p + p { margin-top: 0.5rem; }
+.callout p a { color: var(--color-surface); text-decoration: underline; text-underline-offset: 2px; }
+.callout p a:hover { color: var(--color-accent); }
+
+/* The PayPal button on membership.html stays switched off until its href is filled in. */
+[data-paypal-link][href=""],
+[data-paypal-link]:not([href]) {
+  opacity: 0.55;
+  pointer-events: none;
+  box-shadow: none;
+}
 .table-wrap + .callout { margin-top: 2.5rem; }
 
 .notice {
-  background: #fff7e6;
-  border: 1px solid var(--color-gold-light);
+  background: #faf6ee;
+  border: 1px solid var(--color-accent);
   border-radius: var(--radius);
   padding: 1rem 1.25rem;
   font-size: 0.92rem;
-  color: #6b5715;
+  color: #4f4330;
   margin-bottom: 2rem;
 }
 
@@ -397,9 +434,11 @@ input, textarea, select {
   border-radius: var(--radius);
   background: var(--color-surface);
   color: var(--color-text);
+  transition: border-color var(--dur-fast) ease;
 }
+input:hover, textarea:hover, select:hover { border-color: #b9c4cc; }
 input:focus, textarea:focus, select:focus {
-  outline: 2px solid var(--color-navy);
+  outline: 2px solid var(--color-primary);
   outline-offset: 1px;
 }
 textarea { resize: vertical; min-height: 140px; }
@@ -442,8 +481,8 @@ textarea { resize: vertical; min-height: 140px; }
 
 /* ---------- Footer ---------- */
 .site-footer {
-  background: var(--color-navy-dark);
-  color: var(--color-on-navy-faint);
+  background: var(--color-primary-dark);
+  color: var(--color-on-primary-faint);
   padding: 3rem 0 1.5rem;
   font-size: 0.9rem;
 }
@@ -455,7 +494,7 @@ textarea { resize: vertical; min-height: 140px; }
 }
 .footer-grid h4 { color: var(--color-surface); font-size: 1rem; margin-bottom: 0.85rem; }
 .footer-grid ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; }
-.footer-grid a { color: var(--color-on-navy-faint); }
+.footer-grid a { color: var(--color-on-primary-faint); }
 .footer-grid a:hover { color: var(--color-surface); }
 .footer-legal a { color: inherit; }
 .footer-legal a:hover { color: var(--color-surface); }
@@ -467,7 +506,7 @@ textarea { resize: vertical; min-height: 140px; }
   flex-wrap: wrap;
   gap: 0.5rem;
   font-size: 0.82rem;
-  color: #8b96ac;
+  color: #9fb4c2;
 }
 
 /* ---------- Logos & badges ---------- */
@@ -508,15 +547,22 @@ textarea { resize: vertical; min-height: 140px; }
     top: 100%;
     left: 0;
     right: 0;
-    background: var(--color-navy);
+    background: var(--color-primary);
     flex-direction: column;
     align-items: flex-start;
     padding: 1rem 1.5rem 1.5rem;
     gap: 0.85rem;
-    display: none;
     box-shadow: var(--shadow-md);
+    /* Closed: invisible and out of the tab order, but still able to fade. */
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity var(--dur-fast) ease, visibility 0s linear var(--dur-fast);
   }
-  .nav-links.open { display: flex; }
+  .nav-links.open {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity var(--dur) ease, visibility 0s;
+  }
   .nav-cta { margin-top: 0.25rem; }
 }
 
@@ -524,4 +570,68 @@ textarea { resize: vertical; min-height: 140px; }
   h1 { font-size: 1.9rem; }
   .footer-grid { grid-template-columns: 1fr; }
   .callout { flex-direction: column; align-items: flex-start; }
+}
+
+/* ==========================================================================
+   Motion
+   Colors and shadows always ease. Anything that moves sits inside the
+   no-preference query, so visitors who ask for reduced motion get a still page.
+   ========================================================================== */
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes menu-unroll {
+  from { clip-path: inset(0 0 100% 0); }
+  to { clip-path: inset(0 0 -2rem 0); }
+}
+
+/* Status messages and sheet-loaded rows fade in for everyone; nothing moves. */
+.form-status { animation: fade-in var(--dur) ease both; }
+#upcoming-list li,
+#meetings-table-body tr { animation: fade-in 400ms ease both; }
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Pages cross-fade into each other (switched on by the small <style> in each
+     page's <head>) while the header holds still. */
+  .site-header { view-transition-name: site-header; }
+
+  .btn:hover { transform: translateY(-1px); }
+  .btn:active { transform: translateY(1px); }
+  .card:has(a):hover { transform: translateY(-2px); }
+
+  /* The welcome: the home hero settles into place one line at a time. */
+  .hero .container > div:first-child > * { animation: rise-in 700ms var(--ease-out) both; }
+  .hero .container > div:first-child > :nth-child(2) { animation-delay: 80ms; }
+  .hero .container > div:first-child > :nth-child(3) { animation-delay: 160ms; }
+  .hero .container > div:first-child > :nth-child(4) { animation-delay: 240ms; }
+  .hero-card { animation: rise-in 800ms var(--ease-out) 340ms both; }
+
+  /* Inner pages get a shorter version so moving around the site stays quick. */
+  .page-hero .container > * { animation: rise-in 450ms var(--ease-out) both; }
+  .page-hero .container > :nth-child(2) { animation-delay: 50ms; }
+  .page-hero .container > :nth-child(3) { animation-delay: 100ms; }
+
+  /* Board cards and documents arrive from the Google Sheets after the page loads. */
+  .board-card,
+  #doc-list li { animation: rise-in 500ms var(--ease-out) both; }
+  .board-card:nth-child(2), #doc-list li:nth-child(2) { animation-delay: 60ms; }
+  .board-card:nth-child(3), #doc-list li:nth-child(3) { animation-delay: 120ms; }
+  .board-card:nth-child(4), #doc-list li:nth-child(4) { animation-delay: 180ms; }
+  .board-card:nth-child(n+5), #doc-list li:nth-child(n+5) { animation-delay: 240ms; }
+
+  /* js/main.js adds .reveal to content below the fold, then animates it in on scroll. */
+  .reveal { opacity: 0; }
+
+  @media (max-width: 960px) {
+    .nav-links.open { animation: menu-unroll 300ms var(--ease-out); }
+  }
+}
+
+@media print {
+  .reveal { opacity: 1; }
 }
