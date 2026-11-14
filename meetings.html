@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Meeting Dates | MACTE</title>
   <meta name="description" content="Upcoming MACTE meeting dates, times, and locations." />
+  <meta name="theme-color" content="#1d4f6e" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Michigan Association of Colleges for Teacher Education" />
+  <meta property="og:title" content="Meeting Dates | MACTE" />
+  <meta property="og:description" content="Upcoming MACTE meeting dates, times, and locations." />
   <link rel="icon" href="assets/favicon-32.png" type="image/png" />
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -20,13 +25,13 @@
   <header class="site-header">
     <nav class="nav-bar">
       <a class="brand" href="index.html">
-        <img src="assets/macte-icon-white.png" alt="" class="brand-logo" />
+        <img src="assets/macte-icon-white.png" alt="" class="brand-logo" width="384" height="395" />
         <span class="brand-text">
           <span class="full-name">Michigan Association of Colleges for Teacher Education</span>
           <span class="acronym">MACTE</span>
         </span>
       </a>
-      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="site-nav">&#9776;</button>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
       <ul class="nav-links" id="site-nav">
         <li><a href="index.html">Home</a></li>
         <li><a href="executive-board.html">Executive Board</a></li>
@@ -49,12 +54,13 @@
 
     <section class="section">
       <div class="container">
-        <div id="meetings-notice" class="notice">Loading meeting dates&hellip;</div>
+        <div id="meetings-notice" class="notice" role="status">Loading meeting dates&hellip;</div>
 
         <div class="table-wrap">
           <table>
+            <caption class="visually-hidden">Upcoming MACTE meetings</caption>
             <thead>
-              <tr><th>Date</th><th>Time</th><th>Location</th><th>Focus</th></tr>
+              <tr><th scope="col">Date</th><th scope="col">Time</th><th scope="col">Location</th><th scope="col">Focus</th></tr>
             </thead>
             <tbody id="meetings-table-body">
             </tbody>
@@ -76,11 +82,11 @@
     <div class="container">
       <div class="footer-grid">
         <div>
-          <img src="assets/macte-logo-full-white.png" alt="MACTE" class="footer-logo" />
+          <img src="assets/macte-logo-full-white.png" alt="MACTE" class="footer-logo" width="1029" height="464" />
           <p>The Michigan Association of Colleges for Teacher Education supports deans, chairs, and directors of educator preparation programs across Michigan's colleges and universities.</p>
         </div>
         <div>
-          <h4>Quick Links</h4>
+          <h2 class="footer-heading">Quick Links</h2>
           <ul>
             <li><a href="executive-board.html">Executive Board</a></li>
             <li><a href="meetings.html">Meeting Dates</a></li>
@@ -88,7 +94,7 @@
           </ul>
         </div>
         <div>
-          <h4>Contact</h4>
+          <h2 class="footer-heading">Contact</h2>
           <ul>
             <li><a href="mailto:MichMACTE@gmail.com">MichMACTE@gmail.com</a></li>
             <li><a href="contact.html">Contact form</a></li>
@@ -96,7 +102,7 @@
           </ul>
         </div>
         <div>
-          <h4>Follow Us</h4>
+          <h2 class="footer-heading">Follow Us</h2>
           <ul>
             <li><a href="https://www.linkedin.com/company/michigan-association-of-colleges-for-teacher-education/" target="_blank" rel="noopener">LinkedIn</a></li>
             <li><a href="https://www.facebook.com/Mich.ACTE" target="_blank" rel="noopener">Facebook</a></li>

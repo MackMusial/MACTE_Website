@@ -33,7 +33,7 @@ anywhere without a build step — Netlify, SVSU web hosting, or elsewhere.
 
 ```
 index.html         Home
-executive-board.html Officers, committees, past presidents
+executive-board.html Officers, committees
 meetings.html       Meeting dates
 resources.html      Archived articles, external links, abbreviations glossary
 membership.html     Membership benefits, dues, how to join/renew
@@ -463,7 +463,7 @@ Officers add/edit/remove rows in the meetings sheet — no code changes, no rede
 
 Officers edit the executive board sheet and drop photos in the *MACTE Headshots* folder, following the
 instructions on the sheet's `How to edit` tab. No code changes, no redeploy. The Committees
-and Past Presidents sections of `executive-board.html` are still plain HTML.
+section of `executive-board.html` is still plain HTML.
 
 ### Documents
 
@@ -484,8 +484,9 @@ descriptions) is edited directly on GitHub. No software to install.
 
 Netlify republishes the site automatically within a minute or two.
 
-- The navigation menu and footer are copied into all 6 page files. Changing them means making
-  the same edit in every file.
+- The navigation menu and footer are copied into every page file, including `404.html` (the
+  "page not found" page, whose links start with `/`). Changing them means making the same edit
+  in every file.
 - Every change is saved in the file's **History**. If an edit breaks a page, open History, find
   the version before it, and copy that text back in.
 
@@ -506,7 +507,7 @@ Netlify republishes the site automatically within a minute or two.
 ## Replacing placeholder content
 
 1. **Text/data**: search each page for example names, dates, and dollar amounts and replace
-   with real MACTE information (officers, dues, past presidents). Meeting dates are handled via
+   with real MACTE information (officers, dues). Meeting dates are handled via
    the Google Sheet described above, not by editing HTML directly.
 2. **Documents**: handled by the documents sheet (Part 5), not by editing HTML. Delete the
    two example rows once real documents are added.
@@ -538,3 +539,17 @@ planned host, connected to the GitHub repo with no build command (`netlify.toml`
 Nothing on the site depends on Netlify specifically — it's plain static files, and the contact
 form deliberately routes through Apps Script rather than Netlify Forms — so moving to SVSU
 hosting or anywhere else later is a DNS change, not a rebuild.
+
+`netlify.toml` also carries three things that would need recreating on another host:
+
+- **Security headers**, including a Content Security Policy in **report-only** mode: the browser
+  logs anything the policy would block to its console but blocks nothing. After launch, open
+  every page with the browser console open and send a test contact message. If no policy
+  violations appear, rename `Content-Security-Policy-Report-Only` to `Content-Security-Policy`.
+  If the site ever loads something from a new outside service, add that address to the policy.
+- **Hidden working files**: `README.md`, `templates/` and `apps-script/` return "not found" on
+  the live site, and `color-options.html` is kept out of search results.
+- **`404.html`**, which Netlify serves automatically for any address that doesn't exist.
+
+Still to do once `macte.us` is live: add a `sitemap.xml`, a `<link rel="canonical">` on each
+page, and an `og:image` (a 1200×630 image for link previews). All three need the final address.

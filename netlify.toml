@@ -8,3 +8,34 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    Strict-Transport-Security = "max-age=31536000"
+    # Report-only for now: the browser logs anything this policy would block to
+    # its console but blocks nothing. Once the live site shows no violations on
+    # every page (including sending the contact form), rename the header to
+    # Content-Security-Policy to enforce it.
+    Content-Security-Policy-Report-Only = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://docs.google.com https://*.googleusercontent.com https://script.google.com; form-action 'self' https://script.google.com; base-uri 'self'; object-src 'none'; frame-ancestors 'none'"
+
+# The whole repository is published, so keep the working files that aren't
+# part of the site from being served or indexed.
+[[redirects]]
+  from = "/README.md"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/templates/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/apps-script/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[headers]]
+  for = "/color-options.html"
+  [headers.values]
+    X-Robots-Tag = "noindex"

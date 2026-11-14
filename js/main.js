@@ -84,12 +84,12 @@ function setUpScrollReveal() {
         const index = inGrid ? Array.prototype.indexOf.call(el.parentElement.children, el) : 0;
         el.animate(
           [
-            { opacity: 0, transform: "translateY(16px)" },
+            { opacity: 0, transform: "translateY(10px)" },
             { opacity: 1, transform: "none" },
           ],
           {
-            duration: 600,
-            delay: Math.min(index, 4) * 70,
+            duration: 400,
+            delay: Math.min(index, 4) * 50,
             easing: "cubic-bezier(0.16, 1, 0.3, 1)",
             fill: "backwards",
           }

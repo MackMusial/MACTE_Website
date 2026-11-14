@@ -9,7 +9,8 @@
 const MEETINGS_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRIcN1zj1Ip6TkEdrn9QF2b9C2Tau7_x23nNrNMOHGJz36bkffB7WQxcy2Oh3CfWLiN7yuTL0zf2NlT/pub?gid=0&single=true&output=csv";
 
 function fetchMeetings() {
-  return fetch(MEETINGS_SHEET_CSV_URL)
+  // Give up after 10 seconds so a stalled sheet shows the error notice instead of loading forever.
+  return fetch(MEETINGS_SHEET_CSV_URL, { signal: AbortSignal.timeout(10000) })
     .then((response) => {
       if (!response.ok) throw new Error("Sheet request failed");
       return response.text();

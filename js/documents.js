@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  fetch(DOCUMENTS_SHEET_CSV_URL)
+  fetch(DOCUMENTS_SHEET_CSV_URL, { signal: AbortSignal.timeout(10000) })
     .then((response) => {
       if (!response.ok) throw new Error("Sheet request failed");
       return response.text();
